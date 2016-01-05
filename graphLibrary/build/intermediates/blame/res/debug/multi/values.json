@@ -1,0 +1,102 @@
+[
+    {
+        "outputFile": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\build\\intermediates\\res\\merged\\debug\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 312,
+                    "endColumn": 57,
+                    "endOffset": 365
+                },
+                "from": {
+                    "file": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\src\\main\\res\\values\\dimens.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 92,
+                        "endColumn": 57,
+                        "endOffset": 145
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 370,
+                    "endColumn": 55,
+                    "endOffset": 421
+                },
+                "from": {
+                    "file": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\src\\main\\res\\values\\dimens.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 151,
+                        "endColumn": 55,
+                        "endOffset": 202
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 426,
+                    "endColumn": 52,
+                    "endOffset": 474
+                },
+                "from": {
+                    "file": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 163,
+                        "endColumn": 52,
+                        "endOffset": 211
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 479,
+                    "endColumn": 49,
+                    "endOffset": 524
+                },
+                "from": {
+                    "file": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 58,
+                        "endColumn": 49,
+                        "endOffset": 103
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 529,
+                    "endColumn": 52,
+                    "endOffset": 577
+                },
+                "from": {
+                    "file": "C:\\Users\\namjinha\\AndroidStudioProjects\\SmartAlert\\graphLibrary\\src\\main\\res\\values\\strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 109,
+                        "endColumn": 52,
+                        "endOffset": 157
+                    }
+                }
+            }
+        ]
+    }
+]

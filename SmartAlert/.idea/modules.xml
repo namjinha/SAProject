@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../SmartAlert.iml" filepath="$PROJECT_DIR$/../SmartAlert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartAlert.iml" filepath="$PROJECT_DIR$/smartAlert.iml" />
+    </modules>
+  </component>
+</project>

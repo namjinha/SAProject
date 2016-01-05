@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ahnlab.smartalert.main.MainActivity" >
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/menu_drawser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#f6f6f6"
+            android:dividerHeight="1dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <include
+                android:id="@+id/actionbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                layout="@layout/layout_action_bar"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/main_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    layout="@layout/layout_main_dashboard"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="248dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/bg4"
+                    android:orientation="vertical">
+                    <ListView
+                        android:id="@+id/noti_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_gravity="bottom"
+                        android:layout_below="@+id/main_dashboard"
+                        android:divider="@color/line2"
+                        android:dividerHeight="0.5dp" />
+
+                    <LinearLayout
+                        android:id="@+id/more_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@color/bg3"
+                        android:layout_gravity="bottom"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:clickable="true">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/btn_icon_up" />
+
+                        <TextView
+                            android:id="@+id/more_btn_txt"
+                            style="@style/fc6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="더보" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+
+</LinearLayout>
