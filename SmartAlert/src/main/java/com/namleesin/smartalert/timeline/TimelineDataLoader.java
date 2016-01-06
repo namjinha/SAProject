@@ -37,7 +37,6 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
 	public ArrayList<TimelineData> loadInBackground()
 	{
 		noti_data_list = new ArrayList<TimelineData>();
-		Log.d("NJ LEE", "loadInBackground : ");
 		Cursor cursor = mDbHandler.selectDBData(mQueryType, mParam);
 		cursor.moveToFirst();
 		do
@@ -45,7 +44,6 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
 			String pkgName = cursor.getString(DBValue.CULUM_PACKAGE);
 			TimelineData data = null;
 			try {
-				Log.d("NJ LEE", "pkgName : " + pkgName);
 				data = new TimelineData()
                         .setPkgName(pkgName)
                         .setContent(cursor.getString(DBValue.CULUM_SUBTXT))
@@ -58,16 +56,10 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
 			}
 		}while(cursor.moveToNext());
 
-		Log.d("NJ LEE", "size : "+noti_data_list.size());
 		return noti_data_list;
 	}
 
 	@Override protected void onStartLoading() {
-		if (noti_data_list != null) {
-			// If we currently have a result available, deliver it
-			// immediately.
-			deliverResult(noti_data_list);
-		}
 	}
 
 	@Override public void deliverResult(ArrayList<TimelineData> datas) {

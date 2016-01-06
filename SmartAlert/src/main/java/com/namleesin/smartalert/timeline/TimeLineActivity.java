@@ -42,12 +42,12 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
         if(type == TYPE_PACKAGE)
         {
             param = intent.getStringExtra(TIMELINE_PKG);
-            Log.d("NJ LEE", "param : " + param);
             queryType = DBValue.TYPE_SELECT_PACKAGE_INFO;
         }
 
         setContentView(R.layout.activity_timeline);
         mTimelineListView = (ListView) findViewById(R.id.timeline_list);
+        mAdapter = new TimelineListAdapter(this);
         mTimelineListView.setAdapter(mAdapter);
 
         getSupportLoaderManager().initLoader(1001, null, this).forceLoad();
@@ -61,7 +61,6 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<ArrayList<TimelineData>> loader, ArrayList<TimelineData> data) {
-        Log.d("NJ LEE", "data : "+data);
         if(data != null && data.size() > 0)
         {
             mAdapter.setData(data);
