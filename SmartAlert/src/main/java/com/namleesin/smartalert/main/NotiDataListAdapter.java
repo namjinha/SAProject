@@ -95,7 +95,7 @@ public class NotiDataListAdapter extends BaseAdapter {
 		String count = String.format("%d/ %d", mNotiData.get(position).getLikeCnt(), mNotiData.get(position).getTotalCnt());
 		total.setText(count);
 
-		convertView.setTag(position);
+		convertView.setTag(mNotiData.get(position));
 		return convertView;
 	}
 }

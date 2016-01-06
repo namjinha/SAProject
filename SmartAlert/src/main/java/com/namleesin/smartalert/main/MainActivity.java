@@ -8,9 +8,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.timeline.TimeLineActivity;
 
 
 public class MainActivity extends FragmentActivity implements DrawerListener, 
@@ -69,6 +72,19 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		mAdapter = new NotiDataListAdapter(this);
 		ListView list = (ListView)findViewById(R.id.noti_list);
 		list.setAdapter(mAdapter);
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				NotiInfoData data = (NotiInfoData) view.getTag();
+
+				Log.d("NJ LEE", "data : " + data.getPkgName());
+				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
+				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_PACKAGE);
+				i.putExtra(TimeLineActivity.TIMELINE_PKG, data.getPkgName());
+
+				startActivity(i);
+			}
+		});
 
 		mMainDashboardView = findViewById(R.id.main_dashboard);
 		View more_btn = findViewById(R.id.more_btn);
