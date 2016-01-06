@@ -16,6 +16,9 @@ import com.namleesin.smartalert.dbmgr.DbHandler;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationListener extends NotificationListenerService
 {
+	String[] checkText = { Notification.EXTRA_TEXT, Notification.EXTRA_INFO_TEXT,
+						   Notification.EXTRA_BIG_TEXT,
+						   Notification.EXTRA_SUB_TEXT, Notification.EXTRA_SUMMARY_TEXT};
 	@Override
 	public void onNotificationRemoved(StatusBarNotification sbn) 
 	{
@@ -48,15 +51,23 @@ public class NotificationListener extends NotificationListenerService
 		notiData.notikey = sbn.getKey();
 		notiData.packagename = sbn.getPackageName();
 
-		Log.d("NJ LEE", "notiData.packagename : " + notiData.packagename);
-		//Big Text으로 넘겨줬을 경우에 대한 고려도 해야되지 않을까??
 		notiData.titletxt = noti.extras.getString(Notification.EXTRA_TITLE);
-		notiData.subtxt = noti.extras.getString(Notification.EXTRA_SUB_TEXT);
+
+		String notiText = "";
+		for(int i = 0; i< checkText.length; i++) {
+			CharSequence temp = noti.extras.getCharSequence(checkText[i]);
+			if(temp != null) {
+				notiText += temp.toString();
+				notiText += "\n";
+			}
+		}
+
+		notiData.subtxt = notiText;
 		notiData.notitime = sbn.getPostTime()+"";
 		notiData.dislikestatus = 0;
 		notiData.likestatus = 0;
 		notiData.urlstatus = 0;
-		
+
 		DbHandler handler = new DbHandler(getApplicationContext());
 		handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
 

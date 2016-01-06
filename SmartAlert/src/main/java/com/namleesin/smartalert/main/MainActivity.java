@@ -77,7 +77,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				NotiInfoData data = (NotiInfoData) view.getTag();
 
-				Log.d("NJ LEE", "data : " + data.getPkgName());
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_PACKAGE);
 				i.putExtra(TimeLineActivity.TIMELINE_PKG, data.getPkgName());

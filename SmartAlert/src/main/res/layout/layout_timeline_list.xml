@@ -44,8 +44,7 @@
                 android:id="@+id/icon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/abc_search_url_text_normal"/>
+                android:layout_marginRight="10dp" />
 
             <TextView
                 style="@style/fc4"
@@ -53,9 +52,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:gravity="center_vertical"
                 android:layout_toRightOf="@+id/icon"
                 android:layout_above="@+id/content"
-                android:textSize="22dp"
+                android:textSize="16dp"
                 android:text="G Market"/>
 
             <TextView

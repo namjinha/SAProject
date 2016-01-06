@@ -19,8 +19,8 @@ import java.util.ArrayList;
 public class TimeLineActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<ArrayList<TimelineData>> {
     public static String TIMELINE_TYPE = "type";
     public static String TIMELINE_PKG = "pkg";
-    public static int TYPE_PACKAGE = 0;
 
+    public static int TYPE_PACKAGE = 0;
     public static int TYPE_FAVORITE = 1;
     public static int TYPE_HATE = 2;
     public static int TYPE_TIME = 3;

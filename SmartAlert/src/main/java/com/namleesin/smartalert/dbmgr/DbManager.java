@@ -74,7 +74,7 @@ public class DbManager implements DbInfo.DbHelper
 		final String[] query =
 			{
 				"CREATE TABLE noti_info_table (" + 
-						"noti_package varchar(255) not null primary key, " +
+						"noti_package varchar(255) not null, " +
 						"noti_titletxt varchar(255) not null, " + 
 						"noti_subtxt text not null, " +
 						"noti_id varchar(255) not null, " +
@@ -83,7 +83,6 @@ public class DbManager implements DbInfo.DbHelper
 						"noti_like_status integer not null, " +
 						"noti_dislike_status integer not null, " +
 						"noti_url_status integer not null);"
-				
 			};
 		
 		Collections.addAll(mSqlList, query);
