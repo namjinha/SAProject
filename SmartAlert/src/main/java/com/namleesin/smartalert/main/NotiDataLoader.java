@@ -36,15 +36,6 @@ public class NotiDataLoader extends android.support.v4.content.AsyncTaskLoader<A
 		mDbHandler = new DbHandler(context);
 	}
 
-	private ArrayList<NotiInfoData> getNotiData(String pkgName)
-	{
-		ArrayList<NotiInfoData> data = new ArrayList<>();
-
-
-
-		return data;
-	}
-
 	@Override
 	public ArrayList<NotiInfoData> loadInBackground() 
 	{
