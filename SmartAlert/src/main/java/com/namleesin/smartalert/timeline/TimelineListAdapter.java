@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by chitacan on 2015. 12. 30..
@@ -55,6 +57,12 @@ public class TimelineListAdapter extends BaseAdapter {
         if(convertView == null)
         {
             convertView = mInflater.inflate(R.layout.layout_timeline_list, parent, false);
+
+            TextView tv_date = (TextView) convertView.findViewById(R.id.date);
+            long dateLong = Long.valueOf(mDataArray.get(position).getDate());
+            String date = new SimpleDateFormat("yyyy. MM. dd").format(new Date(dateLong));
+            tv_date.setText(date);
+
             TextView tv_content = (TextView) convertView.findViewById(R.id.content);
             tv_content.setText(mDataArray.get(position).getContent());
 

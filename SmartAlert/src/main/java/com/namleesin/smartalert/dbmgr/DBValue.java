@@ -8,6 +8,7 @@ public class DBValue
 	public static final int CULUM_PACKAGE 		= 0;
 	public static final int CULUM_TITLE 		= 1;
 	public static final int CULUM_SUBTXT 		= 2;
+	public static final int CULNUM_DATE			= 5;
 	public static final int CULUM_LIKESTATUS 	= 6;
 
 	

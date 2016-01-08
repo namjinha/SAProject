@@ -6,17 +6,9 @@
     tools:context="com.ahnlab.smartalert.main.MainActivity" >
 
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/menu_drawser"
+        android:id="@+id/menu_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-        <ListView
-            android:id="@+id/menu_list"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#f6f6f6"
-            android:dividerHeight="1dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,6 +72,14 @@
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#f6f6f6"
+            android:dividerHeight="1dp" />
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>

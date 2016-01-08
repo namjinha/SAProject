@@ -3,10 +3,13 @@ package com.namleesin.smartalert.timeline;
 
 public class TimelineData
 {
+
 	public String pkgName;
 	public String appName;
 	public String content;
 	public int likeStatus;
+
+	public String date;
 
 	public String getPkgName() {
 		return pkgName;
@@ -38,6 +41,15 @@ public class TimelineData
 
 	public TimelineData setContent(String content) {
 		this.content = content;
+		return this;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public TimelineData setDate(String date) {
+		this.date = date;
 		return this;
 	}
 
