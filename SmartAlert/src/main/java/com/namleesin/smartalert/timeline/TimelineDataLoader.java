@@ -48,7 +48,9 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
                         .setPkgName(pkgName)
                         .setContent(cursor.getString(DBValue.CULUM_SUBTXT))
                         .setAppName((String) mPkgMgr.getApplicationInfo(pkgName, PackageManager.GET_UNINSTALLED_PACKAGES).loadLabel(mPkgMgr))
-                        .setLikeStatus(cursor.getInt(DBValue.CULUM_LIKESTATUS));
+                        .setLikeStatus(cursor.getInt(DBValue.CULUM_LIKESTATUS))
+						.setDate(cursor.getString(DBValue.CULNUM_DATE));
+
 				noti_data_list.add(data);
 			}
 			catch (PackageManager.NameNotFoundException e) {

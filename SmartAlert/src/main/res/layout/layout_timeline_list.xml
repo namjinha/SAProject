@@ -28,10 +28,10 @@
                 android:src="@drawable/icon_like_disable"/>
             <TextView
                 style="@style/fc4"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:text="2015.12.25"/>
+                android:textSize="14dp" />
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"

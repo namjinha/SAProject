@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,11 +29,13 @@ import com.namleesin.smartalert.timeline.TimeLineActivity;
 
 
 public class MainActivity extends FragmentActivity implements DrawerListener, 
-													LoaderCallbacks<ArrayList<NotiInfoData>>
+													LoaderCallbacks<ArrayList<NotiInfoData>>,
+													AdapterView.OnItemClickListener
 {
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
+	private DrawerLayout mMenuDrawer;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -55,6 +62,25 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		String[] menu_array = getResources().getStringArray(R.array.menu_str);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu_array);
 		menu.setAdapter(adapter);
+		menu.setOnItemClickListener(this);
+
+		mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+		mMenuDrawer.setDrawerListener(this);
+
+		ImageButton action_drawser = (ImageButton) findViewById(R.id.menu_drawer_btn);
+		action_drawser.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mMenuDrawer.isDrawerOpen(GravityCompat.START))
+				{
+					mMenuDrawer.closeDrawers();
+				}
+				else
+				{
+					mMenuDrawer.openDrawer(GravityCompat.START);
+				}
+			}
+		});
 
 		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
 		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
@@ -166,7 +192,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	public void onDrawerClosed(View arg0) {
 	}
 
-
 	@Override
 	public void onDrawerOpened(View arg0) {
 		
@@ -179,6 +204,11 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	@Override
 	public void onDrawerStateChanged(int arg0) {
-		
+
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
 	}
 }
