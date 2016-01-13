@@ -25,23 +25,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/main_dashboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="242dp"
-                    android:layout_gravity="top"
-                    layout="@layout/layout_main_dashboard"/>
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="228dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <include
+                        android:id="@+id/main_dashboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:layout_gravity="top"
+                        layout="@layout/layout_main_dashboard"/>
+                    <View
+                        android:id="@+id/remain_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:background="@color/bg4"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical">
                     <ListView
                         android:id="@+id/noti_list"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         android:layout_gravity="bottom"
                         android:layout_below="@+id/main_dashboard"
                         android:divider="@color/line2"

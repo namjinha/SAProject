@@ -10,15 +10,25 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +46,19 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
 	private DrawerLayout mMenuDrawer;
+	private LinearLayout mOverlay;
+	private int mOverlayHeight = 0;
+	private View mRemainLayout;
+	private boolean mIsListExpanded = false;
+	private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+		@Override
+		public void onGlobalLayout() {
+			mOverlayHeight = mRemainLayout.getHeight();
+			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mOverlayHeight);
+			params.gravity = Gravity.BOTTOM;
+			mOverlay.setLayoutParams(params);
+		}
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -85,7 +108,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
 		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
 		int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
-		
+
 		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
 		total_view.setText(total_cnt+"");
 		
@@ -112,12 +135,33 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		});
 
 		mMainDashboardView = findViewById(R.id.main_dashboard);
+		mOverlay = (LinearLayout) findViewById(R.id.overlay);
 		View more_btn = findViewById(R.id.more_btn);
 		more_btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				mRemainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
+				View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+				float pixel  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
+				if(mIsListExpanded == false)
+				{
+					float dpHeight = content.getHeight() - pixel;
+					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
+					mOverlay.startAnimation(ani);
+				}
+				else
+				{
+					float dpHeight = content.getHeight() - pixel;
+					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
+					mOverlay.startAnimation(ani);
+				}
+
+				mIsListExpanded = !mIsListExpanded;
 			}
 		});
+
+		mRemainLayout = findViewById(R.id.remain_area);
+		mRemainLayout.getViewTreeObserver().addOnGlobalLayoutListener(mLayoutListener);
 	}
 
 	public void onDestroy()

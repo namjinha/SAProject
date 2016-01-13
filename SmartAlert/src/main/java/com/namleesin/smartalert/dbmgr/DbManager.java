@@ -80,8 +80,8 @@ public class DbManager implements DbInfo.DbHelper
 						"noti_id varchar(255) not null, " +
 						"noti_key varchar(255) not null, " +
 						"noti_time varchar(255) not null, " +
-						"noti_like_status integer not null, " +
-						"noti_dislike_status integer not null, " +
+						"noti_status integer not null, " +
+						"noti_filter varchar(255) not null, " +
 						"noti_url_status integer not null);"
 			};
 		
