@@ -73,6 +73,10 @@ public class DbHandler
 		switch (aSelectType) {
 			case DBValue.TYPE_SELECT_PACKAGE_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_INFO, selectionArgs);
+			case DBValue.TYPE_SELECT_FILTERWORD_INFO:
+				return mDbManager.query(DBValue.SQL_SELECT_FILTERWORD_INFO, selectionArgs);
+			case DBValue.TYPE_SELECT_FILTERPKG_INFO:
+				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_INFO, selectionArgs);
 		}
 		return null;
 	}
@@ -120,8 +124,8 @@ public class DbHandler
 			aNotiData.notiid + "",
 			aNotiData.notikey + "",
 			aNotiData.notitime + "",
-			String.valueOf(aNotiData.likestatus) + "",
-			String.valueOf(aNotiData.dislikestatus) + "",
+			String.valueOf(aNotiData.status) + "",
+			aNotiData.filter_word + "",
 			String.valueOf(aNotiData.urlstatus)
 		};
 		

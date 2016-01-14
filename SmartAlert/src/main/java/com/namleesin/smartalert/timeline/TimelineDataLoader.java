@@ -1,19 +1,21 @@
 package com.namleesin.smartalert.timeline;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.view.View;
 
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
-import com.namleesin.smartalert.main.NotiInfoData;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoader<ArrayList<TimelineData>>
 {
@@ -41,14 +43,14 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
 		cursor.moveToFirst();
 		do
 		{
-			String pkgName = cursor.getString(DBValue.CULUM_PACKAGE);
+			String pkgName = cursor.getString(DBValue.CULNUM_PACKAGE);
 			TimelineData data = null;
 			try {
 				data = new TimelineData()
                         .setPkgName(pkgName)
-                        .setContent(cursor.getString(DBValue.CULUM_SUBTXT))
+                        .setContent(cursor.getString(DBValue.CULNUM_SUBTXT))
                         .setAppName((String) mPkgMgr.getApplicationInfo(pkgName, PackageManager.GET_UNINSTALLED_PACKAGES).loadLabel(mPkgMgr))
-                        .setLikeStatus(cursor.getInt(DBValue.CULUM_LIKESTATUS))
+                        .setLikeStatus(cursor.getInt(DBValue.CULNUM_STATUS))
 						.setDate(cursor.getString(DBValue.CULNUM_DATE));
 
 				noti_data_list.add(data);

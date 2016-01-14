@@ -8,7 +8,7 @@ public class NotiData
 	public String notiid = null;
 	public String notikey = null;
 	public String notitime = null;
-	public int likestatus = 0;
-	public int dislikestatus = 0;
+	public int status = 0;
+	public String filter_word = null;
 	public int urlstatus = 0;
 }
