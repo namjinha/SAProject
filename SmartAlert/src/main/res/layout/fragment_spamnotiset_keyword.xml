@@ -69,25 +69,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/noti_spam_set_tab_keyword"/>
+            android:layout_weight="2"
+            android:gravity="center"
+            android:weightSum="2"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/tab01"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_01_disable"
+                android:text="어플리케이션"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+            <Button
+                android:id="@+id/tab02"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_02_enable"
+                android:text="키워드 추가"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9">
-
+            android:layout_weight="12">
+            <ListView
+                android:id="@+id/listview"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:divider="@color/bg6"
+                android:dividerHeight="1dp"
+                android:choiceMode="singleChoice"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:gravity="center"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:weightSum="12">
             <TextView
                 android:layout_width="0dp"

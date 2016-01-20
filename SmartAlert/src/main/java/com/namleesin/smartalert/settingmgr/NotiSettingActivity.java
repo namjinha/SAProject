@@ -108,12 +108,29 @@ public class NotiSettingActivity extends Activity
             mListView.setAdapter(mAdapter);
 
             Button spamsetappBtn = (Button) rootView.findViewById(R.id.notisetspamappbtn);
-            spamsetappBtn.setOnClickListener(new View.OnClickListener() {
+            spamsetappBtn.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     mViewPager.setCurrentItem(1);
                 }
             });
+
+            Button apptabBtn = (Button) rootView.findViewById(R.id.tab01);
+            apptabBtn.setPressed(true);
+
+            Button keywordtabBtn = (Button) rootView.findViewById(R.id.tab02);
+            keywordtabBtn.setPressed(false);
+            keywordtabBtn.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mViewPager.setCurrentItem(1);
+                }
+            });
+
             return rootView;
         }
 
@@ -164,6 +181,9 @@ public class NotiSettingActivity extends Activity
 
     public static class NotiSpamSetKeywordFragment extends Fragment
     {
+        private ListView mListView = null;
+        private ListViewAdapter mAdapter = null;
+
         public NotiSpamSetKeywordFragment()
         {
         }
@@ -179,16 +199,47 @@ public class NotiSettingActivity extends Activity
                                  Bundle savedInstanceState)
         {
             View rootView = inflater.inflate(R.layout.fragment_spamnotiset_keyword, container, false);
+
+            mListView = (ListView) rootView.findViewById(R.id.listview);
+            mAdapter = new ListViewAdapter(getActivity().getApplicationContext());
+            mAdapter.setData(getKeywordData());
+            mListView.setAdapter(mAdapter);
+
             Button spamsetkeywordBtn = (Button)rootView.findViewById(R.id.notisetspamkeywordbtn);
-            spamsetkeywordBtn.setOnClickListener(new View.OnClickListener()
+            spamsetkeywordBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(2);
+                }
+            });
+
+            Button apptabBtn = (Button) rootView.findViewById(R.id.tab01);
+            apptabBtn.setPressed(false);
+            apptabBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    mViewPager.setCurrentItem(2);
+                    mViewPager.setCurrentItem(0);
                 }
             });
+
+            Button keywordtabBtn = (Button) rootView.findViewById(R.id.tab02);
+            keywordtabBtn.setPressed(true);
+
             return rootView;
+        }
+
+        private ArrayList<ListViewItem> getKeywordData()
+        {
+            ArrayList<ListViewItem> listKeywordData = new ArrayList<ListViewItem>();
+
+            ListViewItem item = new ListViewItem();
+            item.mAppName = "대출";
+
+            listKeywordData.add(item);
+
+            return listKeywordData;
         }
     }
 
