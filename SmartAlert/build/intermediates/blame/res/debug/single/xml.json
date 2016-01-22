@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/chitacan/Project/Git/SAProject/SmartAlert/build/intermediates/res/merged/debug/xml/tab01_selector.xml",
+        "source": "/Users/chitacan/Project/Git/SAProject/SmartAlert/src/main/res/xml/tab01_selector.xml"
+    },
+    {
+        "merged": "/Users/chitacan/Project/Git/SAProject/SmartAlert/build/intermediates/res/merged/debug/xml/tab02_selector.xml",
+        "source": "/Users/chitacan/Project/Git/SAProject/SmartAlert/src/main/res/xml/tab02_selector.xml"
+    }
+]

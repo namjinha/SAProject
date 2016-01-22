@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ActionBarView">
+        <attr name="actionbarType" format="enum">
+            <enum name="main" value="0"/>
+            <enum name="activity" value="1"/>
+            <enum name="view" value="2"/>
+        </attr>
+        <attr name="actionbarTitle" format="string"/>
+    </declare-styleable>
+</resources>
