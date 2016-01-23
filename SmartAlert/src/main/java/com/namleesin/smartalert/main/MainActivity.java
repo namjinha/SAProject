@@ -11,10 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,11 +20,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,12 +33,15 @@ import com.namleesin.smartalert.commonView.ActionBarView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.timeline.TimeLineActivity;
+import com.namleesin.smartalert.utils.NotiAlertState;
+import com.namleesin.smartalert.utils.PFMgr;
+import com.namleesin.smartalert.utils.PFValue;
+
 
 
 public class MainActivity extends FragmentActivity implements DrawerListener, 
 													LoaderCallbacks<ArrayList<NotiInfoData>>,
-													AdapterView.OnItemClickListener
-{
+													AdapterView.OnItemClickListener{
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
@@ -102,6 +100,14 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				} else {
 					mMenuDrawer.openDrawer(GravityCompat.START);
 				}
+			}
+		});
+		mActionbar.setOnGraphButtonListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				OpenActivity.startGraphActivity(MainActivity.this);
 			}
 		});
 
@@ -197,16 +203,67 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		
+if(this.RESULT_OK != resultCode)
+		{
+			finish();
+			return;
+		}
+
+		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
 		{
 			case MainValue.RES_SPLASH_SCREEN:
-				OpenActivity.startGuideMgrActivity(this);
+				checkStartState();
 				break;
 			case MainValue.RES_GUIDE_WIZARD:
-				OpenActivity.startAlertSettingActivity(this);
+				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_GUIDE_OK);
+				if(NotiAlertState.isNLServiceRunning(this))
+				{
+					pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_ALERT_OK);
+					OpenActivity.startSpamSettingActivity(this);
+				}
+				else
+				{
+					OpenActivity.startAlertSettingActivity(this);
+				}
 				break;
 			case MainValue.RES_ALERT_SETTING:
+				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_ALERT_OK);
 				OpenActivity.startSpamSettingActivity(this);
+				break;
+			case MainValue.RES_SL_SETTING:
+				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_SETTING_OK);
+				break;
+			default:
+				break;
+		}
+	}
+
+private void checkStartState()
+	{
+		int initstate = new PFMgr(this).getIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_DEFAULT);
+		switch(initstate)
+		{
+			case PFValue.PRE_INIT_DEFAULT:
+				OpenActivity.startGuideMgrActivity(this);
+				break;
+			case PFValue.PRE_INIT_GUIDE_OK:
+				OpenActivity.startAlertSettingActivity(this);
+				break;
+			case PFValue.PRE_INIT_ALERT_OK:
+				if(false == NotiAlertState.isNLServiceRunning(this))
+				{
+					OpenActivity.startAlertSettingActivity(this);
+					return;
+				}
+				OpenActivity.startSpamSettingActivity(this);
+				break;
+			case PFValue.PRE_INIT_SETTING_OK:
+				if(false == NotiAlertState.isNLServiceRunning(this))
+				{
+					OpenActivity.startAlertSettingActivity(this);
+					return;
+				}
 				break;
 			default:
 				break;
