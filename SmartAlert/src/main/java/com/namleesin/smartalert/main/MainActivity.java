@@ -2,6 +2,7 @@ package com.namleesin.smartalert.main;
 
 import java.util.ArrayList;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -33,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
+import com.namleesin.smartalert.commonView.ActionBarView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.timeline.TimeLineActivity;
@@ -50,6 +52,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	private int mOverlayHeight = 0;
 	private View mRemainLayout;
 	private boolean mIsListExpanded = false;
+	private ActionBarView mActionbar;
 	private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
 		@Override
 		public void onGlobalLayout() {
@@ -90,16 +93,13 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
 		mMenuDrawer.setDrawerListener(this);
 
-		ImageButton action_drawser = (ImageButton) findViewById(R.id.menu_drawer_btn);
-		action_drawser.setOnClickListener(new View.OnClickListener() {
+		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
+		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mMenuDrawer.isDrawerOpen(GravityCompat.START))
-				{
+				if (mMenuDrawer.isDrawerOpen(GravityCompat.START)) {
 					mMenuDrawer.closeDrawers();
-				}
-				else
-				{
+				} else {
 					mMenuDrawer.openDrawer(GravityCompat.START);
 				}
 			}
@@ -148,12 +148,14 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
 					mOverlay.startAnimation(ani);
+					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_VIEW, "최근 한달동안 숨김 알림 앱 순위");
 				}
 				else
 				{
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
 					mOverlay.startAnimation(ani);
+					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_MAIN, null);
 				}
 
 				mIsListExpanded = !mIsListExpanded;

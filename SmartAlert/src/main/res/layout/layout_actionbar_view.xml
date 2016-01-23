@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@color/bg1">
 
@@ -8,26 +10,33 @@
         android:id="@+id/title_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/menu_drawer_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:background="@null"
-            android:src="@drawable/ac_home_menu"
-            android:onClick="OnMenuButtonListener"/>
-
-        <ImageView
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:src="@drawable/top_bi" />
+            android:layout_weight="2">
 
+            <ImageButton
+                android:id="@+id/menu_drawer_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@null"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ac_home_menu"
+                android:onClick="OnMenuButtonListener"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:src="@drawable/top_bi" />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/graph_btn"
             android:layout_width="0dp"
@@ -49,6 +58,7 @@
         android:id="@+id/title_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bg2"
         android:visibility="gone">
         <ImageView
             android:id="@+id/back_arrow"
@@ -67,7 +77,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
-            android:textSize="21dp"
-            android:textColor="@color/bg2"/>
+            android:gravity="center_vertical"
+            android:layout_marginLeft="21dp"
+            android:textSize="18dp"
+            android:text="hello"
+            android:textColor="@color/bg4"/>
     </LinearLayout>
 </LinearLayout>

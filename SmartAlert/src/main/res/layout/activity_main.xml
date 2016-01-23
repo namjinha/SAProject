@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.ahnlab.smartalert.main.MainActivity" >
+    tools:context="com.ahnlab.smartalert.main.MainActivity">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/menu_drawer"
@@ -15,11 +16,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <include
+            <com.namleesin.smartalert.commonView.ActionBarView
                 android:id="@+id/actionbar"
+                custom:actionbarType="main"
+                custom:actionbarTitle="똑똑한 알림"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                layout="@layout/layout_action_bar"/>
+                android:layout_height="48dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
