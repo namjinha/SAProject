@@ -26,8 +26,7 @@
                 android:background="@null"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ac_home_menu"
-                android:onClick="OnMenuButtonListener"/>
+                android:src="@drawable/ac_home_menu" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -44,8 +43,7 @@
             android:background="@color/bg2"
             android:gravity="center"
             android:layout_weight="1"
-            android:clickable="true"
-            android:onClick="OnGraphButtonListener">
+            android:clickable="true">
 
             <ImageView
                 android:layout_width="62dp"
@@ -69,7 +67,6 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
             android:clickable="true"
-            android:onClick="OnFinishButtonListener"
             android:visibility="gone"/>
 
         <TextView

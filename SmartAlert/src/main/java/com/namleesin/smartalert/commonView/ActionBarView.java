@@ -1,6 +1,5 @@
 package com.namleesin.smartalert.commonView;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -11,17 +10,15 @@ import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
 
-import org.w3c.dom.Attr;
-
 /**
  * Created by chitacan on 2016. 1. 14..
  */
-public class ActionBarView extends LinearLayout {
+public class ActionBarView extends LinearLayout implements View.OnClickListener{
     public static final int ACTIONBAR_TYPE_MAIN     = 0;
     public static final int ACTIONBAR_TYPE_ACTIVITY = 1;
     public static final int ACTIONBAR_TYPE_VIEW     = 2;
 
-    private View.OnClickListener mGraghBtnListener;
+    private OnClickListener mGraghBtnListener;
     private OnClickListener mFinishBtnListener;
     private OnClickListener mMenuBtnListener;
 
@@ -70,6 +67,10 @@ public class ActionBarView extends LinearLayout {
                 view.setText(title);
             }
         }
+
+        findViewById(R.id.menu_drawer_btn).setOnClickListener(this);
+        findViewById(R.id.graph_btn).setOnClickListener(this);
+        findViewById(R.id.back_arrow).setOnClickListener(this);
     }
 
     public void setTitleText(String text)
@@ -94,26 +95,28 @@ public class ActionBarView extends LinearLayout {
         mFinishBtnListener = l;
     }
 
-    public void OnFinishButtonListener(View v)
-    {
-        if(mFinishBtnListener != null)
-        {
-            mFinishBtnListener.onClick(v);
-        }
-    }
-
-    public void OnGraphButtonListener(View v)
-    {
-
-    }
-
     public void setOnMenuButtonListener(OnClickListener l)
     {
         mMenuBtnListener = l;
     }
 
-    public void OnMenuButtonListener(View v)
-    {
-        mMenuBtnListener.onClick(v);
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.back_arrow:
+                if(mFinishBtnListener != null)
+                    mFinishBtnListener.onClick(v);
+                break;
+            case R.id.graph_btn:
+                if(mGraghBtnListener != null)
+                    mGraghBtnListener.onClick(v);
+                break;
+            case R.id.menu_drawer_btn:
+                if(mMenuBtnListener != null)
+                    mMenuBtnListener.onClick(v);
+                break;
+        }
     }
 }
