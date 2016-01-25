@@ -4,6 +4,7 @@ package com.namleesin.smartalert.notimgr;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.util.Log;
 import com.namleesin.smartalert.data.NotiData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.shortcut.PrivacyMode;
 
 import java.util.ArrayList;
 
@@ -65,7 +67,7 @@ public class NotificationListener extends NotificationListenerService
 		super.onCreate();
 		loadFilterPkg();
 		loadFilterKeyword();
-		Log.d("NJ LEE","onCreate");
+		Log.d("NJ LEE", "onCreate");
 	}
 
 	@Override
@@ -92,14 +94,21 @@ public class NotificationListener extends NotificationListenerService
 		}
 		return null;
 	}
+
+	private boolean isPrivacyMode()
+	{
+		SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+		int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
+		if(mode == PrivacyMode.PRIVACY_MODE_ON)
+			return true;
+		return false;
+	}
 	
 	@SuppressLint("NewApi")
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)
 	{
-		Log.d("NJ LEE", "onNotificationPosted");
 		Notification noti = sbn.getNotification();
-		
 		NotiData notiData = new NotiData();
 		notiData.notiid = sbn.getId()+"";
 		notiData.notikey = sbn.getKey();
@@ -116,8 +125,6 @@ public class NotificationListener extends NotificationListenerService
 			}
 		}
 
-		Log.d("NJ LEE", "notiText : "+notiText);
-
 		String like = getLikeFilter(notiText);
 		if(like!= null)
 		{
@@ -132,13 +139,16 @@ public class NotificationListener extends NotificationListenerService
 			notiData.filter_word = null;
 		}
 
-		Log.d("NJ LEE", "notiData.status : "+notiData.status+" notiText : "+notiText);
 		notiData.subtxt = notiText;
 		notiData.notitime = sbn.getPostTime()+"";
 		notiData.urlstatus = 0;
 
 		DbHandler handler = new DbHandler(getApplicationContext());
 		int result = handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
-		Log.d("NJ LEE", "result : "+result);
+
+		if(isPrivacyMode())
+		{
+			cancelAllNotifications();
+		}
 	}
 }

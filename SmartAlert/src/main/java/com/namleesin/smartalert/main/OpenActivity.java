@@ -32,7 +32,7 @@ public class OpenActivity
 	public static void startSpamSettingActivity(Context aContext)
 	{
 		Intent i = new Intent(aContext, NotiSettingActivity.class);
-		((Activity)aContext).startActivityForResult(i, MainValue.RES_SPAM_SETTING);
+		((Activity)aContext).startActivityForResult(i, MainValue.RES_SL_SETTING);
 	}
 
 	public static void startGraphActivity(Context aContext)
