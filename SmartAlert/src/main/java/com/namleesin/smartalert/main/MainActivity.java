@@ -181,6 +181,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
 		int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
+		final PrivacyMode privacyMode = new PrivacyMode();
 
 		Log.d("NJ LEE", "mode : " + mode);
 		ImageView privacy = (ImageView) findViewById(R.id.privacy_mode_img);
@@ -194,11 +195,10 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		}
 		else
 		{
-			PrivacyMode.addPrivacyModeShortcut(MainActivity.this);
-
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putInt(PrivacyMode.PREF_PRIVACY_MODE, PrivacyMode.PRIVACY_MODE_OFF);
 			editor.commit();
+			privacyMode.changePrivacyMode(this);
 		}
 
 		findViewById(R.id.privacy_mode_btn).setOnClickListener(new View.OnClickListener() {
@@ -210,13 +210,11 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				SharedPreferences.Editor editor = pref.edit();
 				if(mode == PrivacyMode.PRIVACY_MODE_ON)
 				{
-					editor.putInt(PrivacyMode.PREF_PRIVACY_MODE, PrivacyMode.PRIVACY_MODE_OFF);
-					editor.commit();
+					privacyMode.changePrivacyMode(MainActivity.this);
 				}
 				else if(mode == PrivacyMode.PRIVACY_MODE_OFF)
 				{
-					editor.putInt(PrivacyMode.PREF_PRIVACY_MODE, PrivacyMode.PRIVACY_MODE_ON);
-					editor.commit();
+					privacyMode.changePrivacyMode(MainActivity.this);
 				}
 			}
 		});
@@ -253,14 +251,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-
-		Log.d("NJ LEE", "resultCode : " + resultCode);
-		if(this.RESULT_OK != resultCode)
-		{
-			//check
-			//finish() 여기서 finish()를 해서 메인이 종료됩니다. 확인해세요~ ㅋㅋ
-			return;
-		}
 
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)

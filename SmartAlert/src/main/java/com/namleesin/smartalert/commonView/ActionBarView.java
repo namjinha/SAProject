@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.namleesin.smartalert.R;
 
 /**
- * Created by chitacan on 2016. 1. 14..
+ * Created by comus1200 on 2016. 1. 14..
  */
 public class ActionBarView extends LinearLayout implements View.OnClickListener{
     public static final int ACTIONBAR_TYPE_MAIN     = 0;

@@ -14,7 +14,7 @@ import com.namleesin.smartalert.dbmgr.DBValue;
 import java.util.ArrayList;
 
 /**
- * Created by chitacan on 2015. 12. 24..
+ * Created by comus1200 on 2015. 12. 24..
  */
 public class TimeLineActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<ArrayList<TimelineData>> {
     public static String TIMELINE_TYPE = "type";
