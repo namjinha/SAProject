@@ -3,6 +3,7 @@ package com.namleesin.smartalert.commonView;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ public class ActionBarView extends LinearLayout implements View.OnClickListener{
     public static final int ACTIONBAR_TYPE_MAIN     = 0;
     public static final int ACTIONBAR_TYPE_ACTIVITY = 1;
     public static final int ACTIONBAR_TYPE_VIEW     = 2;
+    public static final int ACTIONBAR_TYPE_WIZARD   = 3;
 
     private OnClickListener mGraghBtnListener;
     private OnClickListener mFinishBtnListener;
@@ -32,7 +34,6 @@ public class ActionBarView extends LinearLayout implements View.OnClickListener{
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View main = inflater.inflate(R.layout.layout_actionbar_view, this, false);
         addView(main);
-
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.ActionBarView,
@@ -48,24 +49,30 @@ public class ActionBarView extends LinearLayout implements View.OnClickListener{
         LinearLayout main_layout = (LinearLayout) findViewById(R.id.title_main);
         LinearLayout activity_layout = (LinearLayout) findViewById(R.id.title_activity);
 
-        if(type == ACTIONBAR_TYPE_MAIN)
+        switch (type)
         {
-            main_layout.setVisibility(View.VISIBLE);
-            activity_layout.setVisibility(View.GONE);
-        }
-        else if(type > 0)
-        {
-            main_layout.setVisibility(View.GONE);
-            activity_layout.setVisibility(View.VISIBLE);
-            if (type == ACTIONBAR_TYPE_VIEW)
-            {
+            case ACTIONBAR_TYPE_MAIN:
+                main_layout.setVisibility(View.VISIBLE);
+                activity_layout.setVisibility(View.GONE);
+                break;
+            case ACTIONBAR_TYPE_VIEW:
+                main_layout.setVisibility(View.GONE);
+                activity_layout.setVisibility(View.VISIBLE);
                 activity_layout.findViewById(R.id.back_arrow).setVisibility(View.GONE);
-            }
-
-            if(title != null) {
-                TextView view = (TextView) findViewById(R.id.title_txt);
-                view.setText(title);
-            }
+                if(title != null) {
+                    TextView view = (TextView) findViewById(R.id.title_txt);
+                    view.setText(title);
+                }
+                break;
+            case ACTIONBAR_TYPE_ACTIVITY:
+                main_layout.setVisibility(View.GONE);
+                activity_layout.setVisibility(View.VISIBLE);
+                activity_layout.findViewById(R.id.back_arrow).setVisibility(View.VISIBLE);
+                if(title != null) {
+                    TextView view = (TextView) findViewById(R.id.title_txt);
+                    view.setText(title);
+                }
+                break;
         }
 
         findViewById(R.id.menu_drawer_btn).setOnClickListener(this);
