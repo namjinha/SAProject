@@ -10,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.namleesin.smartalert.R;
 
 import java.text.SimpleDateFormat;
@@ -17,15 +20,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by chitacan on 2015. 12. 30..
+ * Created by comus1200 on 2015. 12. 30..
  */
 public class TimelineListAdapter extends BaseAdapter {
+
+    private Context mCtx;
     private LayoutInflater mInflater;
     private ArrayList<TimelineData> mDataArray;
     private PackageManager mPkgMgr;
+    private int mAdCnt = 0;
 
     TimelineListAdapter(Context context)
     {
+        mCtx = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDataArray = new ArrayList<>();
         mPkgMgr = context.getPackageManager();
@@ -54,8 +61,21 @@ public class TimelineListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if(convertView == null && position %5 == 0)
+        {
+            AdView adView = new AdView(mCtx);
+            adView.setAdSize(AdSize.BANNER);
+            adView.setAdUnitId(mCtx.getString(R.string.banner_ad_unit_id));
+            AdRequest adRequest = new AdRequest.Builder()
+                                     .build();
+            adView.loadAd(adRequest);
+            mAdCnt++;
+            return adView;
+        }
+
         if(convertView == null)
         {
+            position -= mAdCnt;
             convertView = mInflater.inflate(R.layout.layout_timeline_list, parent, false);
 
             TextView tv_date = (TextView) convertView.findViewById(R.id.date);
@@ -76,6 +96,7 @@ public class TimelineListAdapter extends BaseAdapter {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+            convertView.setTag(position);
         }
         return convertView;
     }

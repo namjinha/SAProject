@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Notification;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -11,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,6 +34,7 @@ import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.ActionBarView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.shortcut.PrivacyMode;
 import com.namleesin.smartalert.timeline.TimeLineActivity;
 import com.namleesin.smartalert.utils.NotiAlertState;
 import com.namleesin.smartalert.utils.PFMgr;
@@ -39,9 +42,9 @@ import com.namleesin.smartalert.utils.PFValue;
 
 
 
-public class MainActivity extends FragmentActivity implements DrawerListener, 
-													LoaderCallbacks<ArrayList<NotiInfoData>>,
-													AdapterView.OnItemClickListener{
+public class MainActivity extends FragmentActivity implements DrawerListener,
+		LoaderCallbacks<ArrayList<NotiInfoData>>,
+		AdapterView.OnItemClickListener{
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
@@ -60,9 +63,9 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			mOverlay.setLayoutParams(params);
 		}
 	};
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) 
+	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -78,7 +81,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		super.onResume();
 		getSupportLoaderManager().initLoader(0, null, this).forceLoad();
 	}
-	
+
 	private void initView()
 	{
 		ListView menu = (ListView) findViewById(R.id.menu_list);
@@ -102,27 +105,13 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				}
 			}
 		});
-		mActionbar.setOnGraphButtonListener(new View.OnClickListener()
-		{
+
+		mActionbar.setOnGraphButtonListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v)
-			{
+			public void onClick(View v) {
 				OpenActivity.startGraphActivity(MainActivity.this);
 			}
 		});
-
-		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
-		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
-		int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
-
-		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
-		total_view.setText(total_cnt+"");
-		
-		TextView spam_view = (TextView) findViewById(R.id.spam_cnt_txt);
-		spam_view.setText(spam_cnt+"");
-		
-		TextView like_view = (TextView) findViewById(R.id.fav_cnt_txt);
-		like_view.setText(like_cnt+"");
 
 		mAdapter = new NotiDataListAdapter(this);
 		ListView list = (ListView)findViewById(R.id.noti_list);
@@ -140,6 +129,25 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			}
 		});
 
+		initDashboard();
+		initPrivacyMode();
+	}
+
+	private void initDashboard()
+	{
+		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
+		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
+		int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
+
+		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
+		total_view.setText(total_cnt+"");
+
+		TextView spam_view = (TextView) findViewById(R.id.spam_cnt_txt);
+		spam_view.setText(spam_cnt+"");
+
+		TextView like_view = (TextView) findViewById(R.id.fav_cnt_txt);
+		like_view.setText(like_cnt+"");
+
 		mMainDashboardView = findViewById(R.id.main_dashboard);
 		mOverlay = (LinearLayout) findViewById(R.id.overlay);
 		View more_btn = findViewById(R.id.more_btn);
@@ -148,18 +156,15 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			public void onClick(View v) {
 				mRemainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
 				View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
-				float pixel  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
-				if(mIsListExpanded == false)
-				{
+				float pixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
+				if (mIsListExpanded == false) {
 					float dpHeight = content.getHeight() - pixel;
-					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
+					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
 					mOverlay.startAnimation(ani);
 					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_VIEW, "최근 한달동안 숨김 알림 앱 순위");
-				}
-				else
-				{
+				} else {
 					float dpHeight = content.getHeight() - pixel;
-					Animation ani = new GrowupAnimation(mOverlay,GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
+					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
 					mOverlay.startAnimation(ani);
 					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_MAIN, null);
 				}
@@ -172,6 +177,50 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		mRemainLayout.getViewTreeObserver().addOnGlobalLayoutListener(mLayoutListener);
 	}
 
+	private void initPrivacyMode()
+	{
+		SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+		int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
+		final PrivacyMode privacyMode = new PrivacyMode();
+
+		Log.d("NJ LEE", "mode : " + mode);
+		ImageView privacy = (ImageView) findViewById(R.id.privacy_mode_img);
+		if(mode == PrivacyMode.PRIVACY_MODE_ON)
+		{
+			privacy.setImageResource(R.drawable.privacy_on_xxhdpi);
+		}
+		else if(mode == PrivacyMode.PRIVACY_MODE_OFF)
+		{
+			privacy.setImageResource(R.drawable.privacy_off_xxhdpi);
+		}
+		else
+		{
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putInt(PrivacyMode.PREF_PRIVACY_MODE, PrivacyMode.PRIVACY_MODE_OFF);
+			editor.commit();
+			privacyMode.changePrivacyMode(this);
+		}
+
+		findViewById(R.id.privacy_mode_btn).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+				int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
+
+				SharedPreferences.Editor editor = pref.edit();
+				if(mode == PrivacyMode.PRIVACY_MODE_ON)
+				{
+					privacyMode.changePrivacyMode(MainActivity.this);
+				}
+				else if(mode == PrivacyMode.PRIVACY_MODE_OFF)
+				{
+					privacyMode.changePrivacyMode(MainActivity.this);
+				}
+			}
+		});
+	}
+
+	@Override
 	public void onDestroy()
 	{
 		super.onDestroy();
@@ -185,7 +234,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	@Override
 	public void onLoadFinished(Loader<ArrayList<NotiInfoData>> loader,
-			ArrayList<NotiInfoData> data) 
+							   ArrayList<NotiInfoData> data)
 	{
 		if(data != null) {
 			mAdapter.setData(data);
@@ -197,17 +246,11 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	public void onLoaderReset(Loader<ArrayList<NotiInfoData>> loader) {
 		mAdapter.setData(null);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		
-if(this.RESULT_OK != resultCode)
-		{
-			finish();
-			return;
-		}
 
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
@@ -239,7 +282,7 @@ if(this.RESULT_OK != resultCode)
 		}
 	}
 
-private void checkStartState()
+	private void checkStartState()
 	{
 		int initstate = new PFMgr(this).getIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_DEFAULT);
 		switch(initstate)
@@ -271,7 +314,7 @@ private void checkStartState()
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) 
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -279,7 +322,7 @@ private void checkStartState()
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
+	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -297,12 +340,12 @@ private void checkStartState()
 
 	@Override
 	public void onDrawerOpened(View arg0) {
-		
+
 	}
 
 	@Override
 	public void onDrawerSlide(View arg0, float arg1) {
-		
+
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.namleesin.smartalert.R;
+import com.namleesin.smartalert.commonView.PullDownInputView;
 
 public class SAGraphActivity extends Activity
 {
@@ -22,8 +23,11 @@ public class SAGraphActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_graph);
 		
-		 GraphView graph = (GraphView) findViewById(R.id.graph);
-	        
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        PullDownInputView view = (PullDownInputView) findViewById(R.id.pulldownView);
+        view.initialize(this);
+
         DataPoint[] points = new DataPoint[31];
         for (int i = 0; i < points.length; i++) 
         {
