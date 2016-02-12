@@ -79,6 +79,6 @@ public class PrivacyMode extends Activity{
 
         // Inform launcher to remove shortcut
         delIntent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-        getApplicationContext().sendBroadcast(delIntent);
+        context.sendBroadcast(delIntent);
     }
 }

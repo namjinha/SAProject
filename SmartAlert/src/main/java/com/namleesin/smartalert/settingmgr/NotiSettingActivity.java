@@ -269,6 +269,7 @@ public class NotiSettingActivity extends Activity
                 @Override
                 public void onClick(View v)
                 {
+                    mActivity.setResult(mActivity.RESULT_OK);
                     mActivity.finish();
                 }
             });

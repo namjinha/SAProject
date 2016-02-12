@@ -1,7 +1,9 @@
 package com.namleesin.smartalert.utils;
 
 import android.app.ActivityManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.provider.Settings;
 
 import com.namleesin.smartalert.notimgr.NotificationListener;
 
@@ -12,16 +14,15 @@ public class NotiAlertState
 {
     public static boolean isNLServiceRunning(Context aContext)
     {
-        ActivityManager manager = (ActivityManager) aContext.getSystemService(Context.ACTIVITY_SERVICE);
+        ContentResolver contentResolver = aContext.getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+        String packageName = aContext.getPackageName();
 
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
         {
-            if (NotificationListener.class.getName().equals(service.service.getClassName()))
-            {
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

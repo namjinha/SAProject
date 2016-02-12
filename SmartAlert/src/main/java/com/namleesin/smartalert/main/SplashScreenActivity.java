@@ -18,9 +18,15 @@ public class SplashScreenActivity extends Activity
 		setContentView(R.layout.activity_splash);
 		
 		mHandler = new Handler();
-		mHandler.postDelayed(finishActivity, 2000);
+		mHandler.postDelayed(finishActivity, 800);
 	}
-	
+
+	@Override
+	public void onBackPressed()
+	{
+		;;
+	}
+
 	private Runnable finishActivity = new Runnable()
 	{
 		@Override
