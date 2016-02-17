@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
+    <com.namleesin.smartalert.commonView.ActionBarView
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        layout="@layout/layout_action_bar"/>
-
+        custom:actionbarType="activity"
+        custom:actionbarTitle="최근 한달동안 숨김 알림">
+    </com.namleesin.smartalert.commonView.ActionBarView>
     <ListView
         android:id="@+id/timeline_list"
         android:layout_width="match_parent"

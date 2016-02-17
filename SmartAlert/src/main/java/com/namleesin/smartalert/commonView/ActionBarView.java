@@ -15,11 +15,13 @@ import com.namleesin.smartalert.R;
  * Created by comus1200 on 2016. 1. 14..
  */
 public class ActionBarView extends LinearLayout implements View.OnClickListener{
-    public static final int ACTIONBAR_TYPE_MAIN     = 0;
-    public static final int ACTIONBAR_TYPE_ACTIVITY = 1;
-    public static final int ACTIONBAR_TYPE_VIEW     = 2;
-    public static final int ACTIONBAR_TYPE_WIZARD   = 3;
+    public static final int ACTIONBAR_TYPE_MAIN             = 0;
+    public static final int ACTIONBAR_TYPE_ACTIVITY         = 1;
+    public static final int ACTIONBAR_TYPE_VIEW             = 2;
+    public static final int ACTIONBAR_TYPE_WIZARD           = 3;
 
+
+    private LayoutInflater mInflater;
     private OnClickListener mGraghBtnListener;
     private OnClickListener mFinishBtnListener;
     private OnClickListener mMenuBtnListener;
@@ -31,59 +33,66 @@ public class ActionBarView extends LinearLayout implements View.OnClickListener{
 
     public ActionBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View main = inflater.inflate(R.layout.layout_actionbar_view, this, false);
-        addView(main);
-        TypedArray a = context.getTheme().obtainStyledAttributes(
-                attrs,
-                R.styleable.ActionBarView,
-                0, 0);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        TypedArray a = context.obtainStyledAttributes(attrs,  R.styleable.ActionBarView);
         int type = a.getInteger(R.styleable.ActionBarView_actionbarType, -1);
         String title = a.getString(R.styleable.ActionBarView_actionbarTitle);
         initView(type, title);
+        Log.d("NJ LEE", "type : "+type+" title : "+title);
+    }
+
+    public int getLayoutResource(int type)
+    {
+        int resource = R.layout.layout_actionbar_main;
+        switch (type) {
+            case ACTIONBAR_TYPE_MAIN:
+                resource = R.layout.layout_actionbar_main;
+                break;
+            case ACTIONBAR_TYPE_ACTIVITY:
+                resource = R.layout.layout_actionbar_activity;
+                break;
+            case ACTIONBAR_TYPE_VIEW:
+            case ACTIONBAR_TYPE_WIZARD:
+                resource = R.layout.layout_actionbar_view;
+                break;
+        }
+        return resource;
     }
 
     public void initView(int type, String title)
     {
-        LinearLayout main_layout = (LinearLayout) findViewById(R.id.title_main);
-        LinearLayout activity_layout = (LinearLayout) findViewById(R.id.title_activity);
+        View main = mInflater.inflate(getLayoutResource(type), this, false);
+        if(main != null) {
+            addView(main);
+        }
 
         switch (type)
         {
             case ACTIONBAR_TYPE_MAIN:
-                main_layout.setVisibility(View.VISIBLE);
-                activity_layout.setVisibility(View.GONE);
-                break;
-            case ACTIONBAR_TYPE_VIEW:
-                main_layout.setVisibility(View.GONE);
-                activity_layout.setVisibility(View.VISIBLE);
-                activity_layout.findViewById(R.id.back_arrow).setVisibility(View.GONE);
-                if(title != null) {
-                    TextView view = (TextView) findViewById(R.id.title_txt);
-                    view.setText(title);
-                }
+                main.findViewById(R.id.menu_drawer_btn).setOnClickListener(this);
+                main.findViewById(R.id.graph_btn).setOnClickListener(this);
                 break;
             case ACTIONBAR_TYPE_ACTIVITY:
-                main_layout.setVisibility(View.GONE);
-                activity_layout.setVisibility(View.VISIBLE);
-                activity_layout.findViewById(R.id.back_arrow).setVisibility(View.VISIBLE);
-                if(title != null) {
-                    TextView view = (TextView) findViewById(R.id.title_txt);
-                    view.setText(title);
-                }
+                main.findViewById(R.id.back_arrow).setOnClickListener(this);
+                break;
+            case ACTIONBAR_TYPE_VIEW:
+            case ACTIONBAR_TYPE_WIZARD:
                 break;
         }
 
-        findViewById(R.id.menu_drawer_btn).setOnClickListener(this);
-        findViewById(R.id.graph_btn).setOnClickListener(this);
-        findViewById(R.id.back_arrow).setOnClickListener(this);
+        TextView title_tv = (TextView) findViewById(R.id.title_txt);
+        if(title_tv == null)
+            return;
+
+        title_tv.setText(title);
     }
 
     public void setTitleText(String text)
     {
         TextView view = (TextView) findViewById(R.id.title_txt);
-        view.setText(text);
+        if(view != null)
+            view.setText(text);
     }
 
     public void setTitleType(int type, String titleStr)
