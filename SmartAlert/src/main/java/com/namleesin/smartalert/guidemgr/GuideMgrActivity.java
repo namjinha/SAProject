@@ -41,6 +41,9 @@ public class GuideMgrActivity extends Activity
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_guide_mgr_activiy, menu);
@@ -145,6 +148,7 @@ public class GuideMgrActivity extends Activity
                 @Override
                 public void onClick(View v)
                 {
+                    mActivity.setResult(mActivity.RESULT_OK);
                     mActivity.finish();
                 }
             });

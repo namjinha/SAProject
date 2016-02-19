@@ -252,6 +252,12 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if(resultCode != this.RESULT_OK)
+		{
+			finish();
+			return;
+		}
+
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
 		{
@@ -282,7 +288,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		}
 	}
 
-	private void checkStartState()
+private void checkStartState()
 	{
 		int initstate = new PFMgr(this).getIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_DEFAULT);
 		switch(initstate)
@@ -356,5 +362,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+		mMenuDrawer.closeDrawers();
 	}
 }

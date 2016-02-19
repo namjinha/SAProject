@@ -249,7 +249,6 @@ public class DbManagerSingleton
 						// Log.e("DB", "failed to create table : " + SQLCrtTbl);
 					}
 				}
-				Log.d("NJ LEE", "DB Created");
 			}
 		}
 		

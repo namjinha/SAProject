@@ -52,7 +52,6 @@ public class TimelineListAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDataArray = new ArrayList<>();
         mPkgMgr = context.getPackageManager();
-        Log.d("NJ LEE", "mDataArray : "+mDataArray.size());
     }
 
     public void setData(ArrayList<TimelineData> data)
