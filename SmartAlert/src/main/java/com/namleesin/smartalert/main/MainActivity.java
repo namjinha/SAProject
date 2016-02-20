@@ -293,7 +293,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		}
 	}
 
-	private void checkStartState()
+private void checkStartState()
 	{
 		int initstate = new PFMgr(this).getIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_DEFAULT);
 		switch(initstate)

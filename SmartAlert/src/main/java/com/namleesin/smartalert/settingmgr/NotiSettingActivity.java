@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -262,17 +264,29 @@ public class NotiSettingActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState)
         {
+
             View rootView = inflater.inflate(R.layout.fragment_likenotiset_keyword, container, false);
             Button likesetkeywordBtn = (Button)rootView.findViewById(R.id.notisetlikekeywordbtn);
-            likesetkeywordBtn.setOnClickListener(new View.OnClickListener()
-            {
+            likesetkeywordBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
-                    mActivity.setResult(mActivity.RESULT_OK);
+                public void onClick(View v) {
                     mActivity.finish();
                 }
             });
+
+            PullDownInputView pulldownView = (PullDownInputView) rootView.findViewById(R.id.pulldownView);
+            pulldownView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
+                @Override
+                public void onPUlldownInpuViewCallback(String input) {
+                    Log.d("NJ LEE", "input : " + input);
+                }
+            });
+
+            Rect delegateArea = new Rect();
+            rootView.getHitRect(delegateArea);
+            Log.d("NJ LEE", delegateArea.right+" "+delegateArea.bottom);
+            TouchDelegate delegate = new TouchDelegate(delegateArea, pulldownView);
+            rootView.setTouchDelegate(delegate);
             return rootView;
         }
     }

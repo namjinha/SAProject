@@ -57,6 +57,7 @@ public class NotiDataLoader extends android.support.v4.content.AsyncTaskLoader<A
 		}
 		
 		Collections.sort(noti_data_list, compator);
+		Collections.reverseOrder();
 
 		return noti_data_list;
 	}
