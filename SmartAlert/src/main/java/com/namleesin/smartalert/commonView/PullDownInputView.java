@@ -21,7 +21,10 @@ import com.namleesin.smartalert.R;
 /**
  * Created by nanjui on 2016. 1. 30..
  */
-public class PullDownInputView extends LinearLayout implements View.OnTouchListener {
+public class PullDownInputView extends LinearLayout implements View.OnTouchListener,
+                                                               View.OnClickListener
+
+{
     private final int EXPAND_HEIGHT = 100;
 
     private float mY;
@@ -29,6 +32,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
     private float mMaxHeight = 0;
     private OnPullDownInputViewCallback mPulldownInputCallback = null;
     private boolean isInputboxShown = false;
+    private float mOriginalHeight;
 
     public PullDownInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,9 +43,22 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
             @Override
             public void onGlobalLayout() {
                 mMaxHeight = getHeight() + EXPAND_HEIGHT;
+                mOriginalHeight = findViewById(R.id.view_temp).getHeight();
+
                 PullDownInputView.this.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+
+        initView();
+    }
+
+    private void initView()
+    {
+        ImageButton addBtn = (ImageButton) findViewById(R.id.add_btn);
+        addBtn.setOnClickListener(this);
+
+        LinearLayout close_layout = (LinearLayout) findViewById(R.id.close);
+        close_layout.setOnClickListener(this);
     }
 
     @Override
@@ -68,6 +85,11 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
                     isInputboxShown = true;
                     EditText edit = (EditText) findViewById(R.id.keyword);
                     edit.setEnabled(true);
+                    View pulldown_layout = findViewById(R.id.pulldown);
+                    pulldown_layout.setVisibility(View.GONE);
+
+                    View close_layout = findViewById(R.id.close);
+                    close_layout.setVisibility(View.VISIBLE);
                 }
                 temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)h));
                 break;
@@ -105,7 +127,6 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
-        Log.d("NJ LEE", "action : "+action);
         if(isInputboxShown == true)
             return false;
 
@@ -128,6 +149,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
                     edit.setEnabled(true);
                 }
                 temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)h));
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 mDistance = Math.abs(mY - event.getY());
@@ -142,8 +164,28 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
         return false;
     }
 
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id)
+        {
+            case R.id.close:
+                isInputboxShown = false;
+                View temp = findViewById(R.id.view_temp);
+                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mOriginalHeight));
+                findViewById(R.id.close).setVisibility(View.GONE);
+                findViewById(R.id.pulldown).setVisibility(View.VISIBLE);
+                break;
+            case R.id.add_btn:
+                EditText edit = (EditText) findViewById(R.id.keyword);
+                mPulldownInputCallback.onPUlldownInpuViewCallback(edit.getText().toString());
+                edit.setText("");
+                break;
+        }
+    }
+
     public interface OnPullDownInputViewCallback
     {
-        public void onPUlldownInpuViewCallback(String input);
+        void onPUlldownInpuViewCallback(String input);
     }
 }

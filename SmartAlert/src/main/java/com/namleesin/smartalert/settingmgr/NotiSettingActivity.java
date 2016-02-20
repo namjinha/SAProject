@@ -20,9 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.PullDownInputView;
+import com.namleesin.smartalert.data.KeywordData;
+import com.namleesin.smartalert.dbmgr.DBValue;
+import com.namleesin.smartalert.dbmgr.DbHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,6 +222,19 @@ public class NotiSettingActivity extends Activity
                 }
             });
 
+            PullDownInputView pullDownInputView = (PullDownInputView) rootView.findViewById(R.id.pulldownView);
+            pullDownInputView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
+                @Override
+                public void onPUlldownInpuViewCallback(String input) {
+                    Log.d("NJ Lee", "input : "+input);
+                    DbHandler handler = new DbHandler(mActivity);
+                    KeywordData keywordData = new KeywordData().setKeywordata(input)
+                            .setKeywordstatus(DBValue.STATUS_DISLIKE);
+                    handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
+                    Toast.makeText(mActivity, input+" 추가 되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             Button apptabBtn = (Button) rootView.findViewById(R.id.tab01);
             apptabBtn.setPressed(false);
             apptabBtn.setOnClickListener(new View.OnClickListener()
@@ -278,13 +295,17 @@ public class NotiSettingActivity extends Activity
             pulldownView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
-                    Log.d("NJ LEE", "input : " + input);
+                    Log.d("NJ Lee", "input : "+input);
+                    DbHandler handler = new DbHandler(mActivity);
+                    KeywordData keywordData = new KeywordData().setKeywordata(input)
+                            .setKeywordstatus(DBValue.STATUS_LIKE);
+                    handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
+                    Toast.makeText(mActivity, input+" 추가 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
 
             Rect delegateArea = new Rect();
             rootView.getHitRect(delegateArea);
-            Log.d("NJ LEE", delegateArea.right+" "+delegateArea.bottom);
             TouchDelegate delegate = new TouchDelegate(delegateArea, pulldownView);
             rootView.setTouchDelegate(delegate);
             return rootView;

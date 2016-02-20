@@ -119,7 +119,6 @@ public class TimelineListAdapter extends BaseAdapter {
         }
 
         int index = getItemIndex(position);
-        Log.d("NJ LEE", "index : "+index);
 
         ViewHolder holder;
         if(convertView == null || convertView.getTag() instanceof Integer) {

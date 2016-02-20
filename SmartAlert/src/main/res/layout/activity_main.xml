@@ -83,15 +83,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="더보" />
+                            android:text="더보기" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
-        <ListView
+        <com.namleesin.smartalert.main.MenuDrawerView
             android:id="@+id/menu_list"
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="#f6f6f6"
