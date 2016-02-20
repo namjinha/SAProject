@@ -7,10 +7,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.namleesin.smartalert.R;
+import com.namleesin.smartalert.main.OpenActivity;
 
 
 public class AlertSettingActivity extends Activity implements OnClickListener
 {
+	private boolean mFinishState = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -19,7 +22,18 @@ public class AlertSettingActivity extends Activity implements OnClickListener
 		
 		Button btn = (Button)this.findViewById(R.id.alertbutton);
 		btn.setOnClickListener(this);
-		
+	}
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+
+		if(true == mFinishState)
+		{
+			setResult(RESULT_OK);
+			finish();
+		}
 	}
 
 	@Override
@@ -28,8 +42,8 @@ public class AlertSettingActivity extends Activity implements OnClickListener
 		switch(v.getId())
 		{
 			case R.id.alertbutton:
-				setResult(RESULT_OK);
-				finish();
+				mFinishState = true;
+				OpenActivity.startAlertAccessSettingActivity(this);
 				break;
 			default:
 				break;

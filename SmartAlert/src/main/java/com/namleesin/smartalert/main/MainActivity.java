@@ -2,6 +2,7 @@ package com.namleesin.smartalert.main;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -198,7 +199,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putInt(PrivacyMode.PREF_PRIVACY_MODE, PrivacyMode.PRIVACY_MODE_OFF);
 			editor.commit();
-			privacyMode.changePrivacyMode(this);
+			privacyMode.changePrivacyMode(MainActivity.this);
 		}
 
 		findViewById(R.id.privacy_mode_btn).setOnClickListener(new View.OnClickListener() {
@@ -208,12 +209,9 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
 
 				SharedPreferences.Editor editor = pref.edit();
-				if(mode == PrivacyMode.PRIVACY_MODE_ON)
-				{
+				if (mode == PrivacyMode.PRIVACY_MODE_ON) {
 					privacyMode.changePrivacyMode(MainActivity.this);
-				}
-				else if(mode == PrivacyMode.PRIVACY_MODE_OFF)
-				{
+				} else if (mode == PrivacyMode.PRIVACY_MODE_OFF) {
 					privacyMode.changePrivacyMode(MainActivity.this);
 				}
 			}
@@ -252,6 +250,12 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if(resultCode != this.RESULT_OK)
+		{
+			finish();
+			return;
+		}
+
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
 		{
@@ -260,7 +264,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				break;
 			case MainValue.RES_GUIDE_WIZARD:
 				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_GUIDE_OK);
-				if(NotiAlertState.isNLServiceRunning(this))
+				if(true == NotiAlertState.isNLServiceRunning(this))
 				{
 					pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_ALERT_OK);
 					OpenActivity.startSpamSettingActivity(this);
@@ -271,8 +275,15 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				}
 				break;
 			case MainValue.RES_ALERT_SETTING:
-				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_ALERT_OK);
-				OpenActivity.startSpamSettingActivity(this);
+				if(false == NotiAlertState.isNLServiceRunning(this))
+				{
+					OpenActivity.startAlertSettingActivity(this);
+				}
+				else
+				{
+					pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_ALERT_OK);
+					OpenActivity.startSpamSettingActivity(this);
+				}
 				break;
 			case MainValue.RES_SL_SETTING:
 				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_SETTING_OK);
@@ -291,21 +302,29 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				OpenActivity.startGuideMgrActivity(this);
 				break;
 			case PFValue.PRE_INIT_GUIDE_OK:
-				OpenActivity.startAlertSettingActivity(this);
+				if(false == NotiAlertState.isNLServiceRunning(this))
+				{
+					OpenActivity.startAlertSettingActivity(this);
+				}
+				else
+				{
+					OpenActivity.startSpamSettingActivity(this);
+				}
 				break;
 			case PFValue.PRE_INIT_ALERT_OK:
 				if(false == NotiAlertState.isNLServiceRunning(this))
 				{
 					OpenActivity.startAlertSettingActivity(this);
-					return;
 				}
-				OpenActivity.startSpamSettingActivity(this);
+				else
+				{
+					OpenActivity.startSpamSettingActivity(this);
+				}
 				break;
 			case PFValue.PRE_INIT_SETTING_OK:
 				if(false == NotiAlertState.isNLServiceRunning(this))
 				{
 					OpenActivity.startAlertSettingActivity(this);
-					return;
 				}
 				break;
 			default:
@@ -354,7 +373,20 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+	{
+		switch(position)
+		{
+			case MainValue.MENU_ITEM_SPAM_ALERT:
+				OpenActivity.startSpamSettingActivity(this);
+				break;
+			case MainValue.MENU_ITEM_LIKE_ALERT:
+				OpenActivity.startSpamSettingActivity(this);
+				break;
+			default:
+				break;
+		}
 
+		mMenuDrawer.closeDrawers();
 	}
 }

@@ -28,7 +28,13 @@ public class OpenActivity
 		Intent i = new Intent(aContext, AlertSettingActivity.class);
 		((Activity)aContext).startActivityForResult(i, MainValue.RES_ALERT_SETTING);
 	}
-	
+
+	public static void startAlertAccessSettingActivity(Context aContext)
+	{
+		Intent i = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+		((Activity)aContext).startActivityForResult(i, MainValue.RES_ALERT_ACCESS);
+	}
+
 	public static void startSpamSettingActivity(Context aContext)
 	{
 		Intent i = new Intent(aContext, NotiSettingActivity.class);
