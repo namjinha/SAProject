@@ -69,7 +69,13 @@ public class DbHandler
 
 	public Cursor selectDBData(int aSelectType, String aParam)
 	{
-		String[] selectionArgs = {aParam+""};
+		String[] selectionArgs = null;
+		if(aParam != null)
+		{
+			selectionArgs = new String[1];
+			selectionArgs[0] = new String(aParam);
+		}
+
 		switch (aSelectType) {
 			case DBValue.TYPE_SELECT_PACKAGE_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_INFO, selectionArgs);
@@ -99,7 +105,8 @@ public class DbHandler
 			default:
 				break;
 		}
-		
+
+		Log.d("NJ LEE", "result : "+result);
 		return result;
 	}
 	
@@ -145,10 +152,9 @@ public class DbHandler
 			return null;
 		}
 
-		String[] params =
-		{
+		String[] params = {
 				aKeywordData.keywordata + "",
-			String.valueOf(aKeywordData.keywordstatus)
+				aKeywordData.keywordstatus+""
 		};
 		
 		return params;

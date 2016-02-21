@@ -4,6 +4,7 @@ package com.namleesin.smartalert.settingmgr;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -27,6 +28,7 @@ import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.data.KeywordData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.notimgr.NotificationListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -295,12 +297,14 @@ public class NotiSettingActivity extends Activity
             pulldownView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
-                    Log.d("NJ Lee", "input : "+input);
                     DbHandler handler = new DbHandler(mActivity);
                     KeywordData keywordData = new KeywordData().setKeywordata(input)
                             .setKeywordstatus(DBValue.STATUS_LIKE);
                     handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
                     Toast.makeText(mActivity, input+" 추가 되었습니다.", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(NotificationListener.UPDATE_FILTER);
+                    getActivity().sendBroadcast(intent);
                 }
             });
 

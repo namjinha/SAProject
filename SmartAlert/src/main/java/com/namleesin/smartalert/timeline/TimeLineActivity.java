@@ -44,6 +44,10 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
             param = intent.getStringExtra(TIMELINE_PKG);
             queryType = DBValue.TYPE_SELECT_PACKAGE_INFO;
         }
+        else if(type == TYPE_FAVORITE)
+        {
+            queryType = DBValue.TYPE_SELECT_PKGINFO_LIKESTAT;
+        }
 
         setContentView(R.layout.activity_timeline);
         mTimelineListView = (ListView) findViewById(R.id.timeline_list);
