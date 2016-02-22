@@ -1,6 +1,7 @@
 package com.namleesin.smartalert.graph;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -14,6 +15,10 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.PullDownInputView;
+import com.namleesin.smartalert.dbmgr.DBValue;
+import com.namleesin.smartalert.dbmgr.DbHandler;
+
+import java.util.ArrayList;
 
 public class SAGraphActivity extends Activity
 {
@@ -25,13 +30,29 @@ public class SAGraphActivity extends Activity
 		
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
-        PullDownInputView view = (PullDownInputView) findViewById(R.id.pulldownView);
-        view.initialize(this);
+        ArrayList<String> daylist = new ArrayList<String>();
+        DbHandler handler = new DbHandler(getApplication());
+        Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_DAILY_NOTI_INFO, null);
+        if(cursor == null)
+            return;
+        cursor.moveToFirst();
+        do
+        {
+            String day = cursor.getString(0);
+            String count = cursor.getString(1);
+            daylist.add(count);
+        }
+        while(cursor.moveToNext());
+
+        while(daylist.size() < 31)
+        {
+            daylist.add("0");
+        }
 
         DataPoint[] points = new DataPoint[31];
-        for (int i = 0; i < points.length; i++) 
+        for (int i = 0; i < points.length; i++)
         {
-            points[i] = new DataPoint(i, (int)(Math.random() * 100));
+            points[i] = new DataPoint(i, Integer.valueOf(daylist.get(30-i)));
         }
         
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<DataPoint>(points);
@@ -66,7 +87,7 @@ public class SAGraphActivity extends Activity
         // set manual X bounds
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(1);
-        graph.getViewport().setMaxY(150);
+        graph.getViewport().setMaxY(1000);
 
         graph.getViewport().setXAxisBoundsManual(false);
         graph.getViewport().setMinX(26);
