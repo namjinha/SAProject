@@ -49,7 +49,7 @@ public class DBValue
 	public static final String SQL_SELECT_DISLIKE_PACKAGE_COUNT = "SELECT count(*) FROM noti_info_table WHERE noti_package=? and noti_status="+STATUS_DISLIKE;
 	public static final String SQL_SELECT_PACKAGE_INFO_COUNT	= "SELECT count(*) FROM noti_info_table WHERE noti_package=?";
 	public static final String SQL_SELECT_LIKE_PACKGAE_COUNT	= "SELECT count(*) FROM noti_info_table WHERE noti_package=? and noti_status = "+STATUS_LIKE;
-	public static final String SQL_SELECT_PACKAGE_INFO			= "SELECT * FROM noti_info_table WHERE noti_package=?";
+	public static final String SQL_SELECT_PACKAGE_INFO			= "SELECT * FROM noti_info_table WHERE noti_package=? order by noti_time desc";
 	public static final String SQL_SELECT_PKGINFO_LIKESTAT		= "SELECT * FROM noti_info_table WHERE noti_status=?";
 	public static final String SQL_SELECT_FILTERWORD_INFO		= "select * from keyword_filter_table";
 	public static final String SQL_SELECT_FILTERPKG_INFO		= "select * from package_filter_table";

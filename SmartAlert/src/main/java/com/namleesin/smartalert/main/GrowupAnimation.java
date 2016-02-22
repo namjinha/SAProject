@@ -24,8 +24,7 @@ public class GrowupAnimation extends Animation {
         mToHeight = toHeight;
         mFromHeight = fromHeight;
         mView = v;
-        setDuration(1000);
-        Log.d("NJ LEE", "mToHeight : "+mToHeight+" mFromHeight : "+mFromHeight);
+        setDuration(500);
     }
 
     @Override

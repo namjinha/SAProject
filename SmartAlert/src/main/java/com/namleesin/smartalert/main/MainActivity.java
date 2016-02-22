@@ -2,10 +2,9 @@ package com.namleesin.smartalert.main;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -24,7 +23,6 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,16 +83,16 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	private void initView()
 	{
-		ListView menu = (ListView) findViewById(R.id.menu_list);
-
-		String[] menu_array = getResources().getStringArray(R.array.menu_str);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu_array);
-		menu.setAdapter(adapter);
-		menu.setOnItemClickListener(this);
-
+		MenuDrawerView menu_view = (MenuDrawerView) findViewById(R.id.menu_list);
+		menu_view.setOnMenuItemClickListener(this);
+		menu_view.setCloseClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mMenuDrawer.closeDrawers();
+			}
+		});
 		mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
 		mMenuDrawer.setDrawerListener(this);
-
 		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
 		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
@@ -184,7 +182,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		int mode = pref.getInt(PrivacyMode.PREF_PRIVACY_MODE, -1);
 		final PrivacyMode privacyMode = new PrivacyMode();
 
-		Log.d("NJ LEE", "mode : " + mode);
 		ImageView privacy = (ImageView) findViewById(R.id.privacy_mode_img);
 		if(mode == PrivacyMode.PRIVACY_MODE_ON)
 		{
@@ -249,12 +246,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-
-		if(resultCode != this.RESULT_OK)
-		{
-			finish();
-			return;
-		}
 
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
