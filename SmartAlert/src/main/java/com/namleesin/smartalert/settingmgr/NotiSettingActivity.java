@@ -27,6 +27,7 @@ import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.data.KeywordData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +37,6 @@ public class NotiSettingActivity extends Activity
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private static ViewPager mViewPager;
     private static Activity mActivity;
-
-    public static interface AppFilter
-    {
-        public void init();
-        public boolean filterApp(ApplicationInfo info);
-    }
-
-    public static final AppFilter THIRD_PARTY_FILTER = new AppFilter()
-    {
-        public void init() {
-        }
-        @Override
-        public boolean filterApp(ApplicationInfo info) {
-            if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                return true;
-            } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,11 +70,8 @@ public class NotiSettingActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    public static class NotiSpamSetAppFragment extends Fragment {
-        private final int MENU_DOWNLOAD = 0;
-        private final int MENU_ALL = 1;
-        private int MENU_MODE = MENU_DOWNLOAD;
-
+    public static class NotiSpamSetAppFragment extends Fragment
+    {
         private ListView mListView = null;
         private ListViewAdapter mAdapter = null;
 
@@ -113,7 +90,7 @@ public class NotiSettingActivity extends Activity
 
             mListView = (ListView) rootView.findViewById(R.id.listview);
             mAdapter = new ListViewAdapter(getActivity().getApplicationContext());
-            mAdapter.setData(getApplicatonInfoList());
+            mAdapter.setData(AppInfo.getApplicatonInfoList(getActivity()));
             mListView.setAdapter(mAdapter);
 
             Button spamsetappBtn = (Button) rootView.findViewById(R.id.notisetspamappbtn);
@@ -141,50 +118,6 @@ public class NotiSettingActivity extends Activity
             });
 
             return rootView;
-        }
-
-        private ArrayList<ListViewItem> getApplicatonInfoList()
-        {
-            ArrayList<ListViewItem> listAppInfoData = new ArrayList<ListViewItem>();
-            PackageManager pm = getActivity().getPackageManager();
-            List<ApplicationInfo> appList = pm
-                    .getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES
-                            | PackageManager.GET_DISABLED_COMPONENTS);
-
-            AppFilter filter;
-            switch (MENU_MODE)
-            {
-                case MENU_DOWNLOAD:
-                    filter = THIRD_PARTY_FILTER;
-                    break;
-                default:
-                    filter = null;
-                    break;
-            }
-
-            if (filter != null)
-            {
-                filter.init();
-            }
-
-            ListViewItem addInfo = null;
-            ApplicationInfo info = null;
-            for (ApplicationInfo app : appList)
-            {
-                info = app;
-                if (filter == null || filter.filterApp(info))
-                {
-                    addInfo = new ListViewItem();
-                    // App Icon
-                    addInfo.mAppIcon = app.loadIcon(pm);
-                    // App Name
-                    addInfo.mAppName = app.loadLabel(pm).toString();
-
-                    listAppInfoData.add(addInfo);
-                }
-            }
-
-            return listAppInfoData;
         }
     }
 
