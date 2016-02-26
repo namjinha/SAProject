@@ -3,7 +3,9 @@ package com.namleesin.smartalert.utils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 
+import com.namleesin.smartalert.graph.SAGraphActivity;
 import com.namleesin.smartalert.settingmgr.ListViewItem;
 import com.namleesin.smartalert.settingmgr.NotiSettingActivity;
 
@@ -15,9 +17,9 @@ import java.util.List;
  */
 public class AppInfo
 {
-    private static final int MENU_DOWNLOAD = 0;
-    private static final int MENU_ALL = 1;
-    private static int MENU_MODE = MENU_DOWNLOAD;
+    public static final int MENU_DOWNLOAD = 0;
+    public static final int MENU_ALL = 1;
+    public static int MENU_MODE = MENU_DOWNLOAD;
 
     public static interface AppFilter
     {

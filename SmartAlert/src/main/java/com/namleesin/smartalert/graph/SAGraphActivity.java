@@ -1,12 +1,18 @@
 package com.namleesin.smartalert.graph;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -18,13 +24,17 @@ import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.main.MainActivity;
 import com.namleesin.smartalert.settingmgr.ListViewAdapter;
+import com.namleesin.smartalert.settingmgr.ListViewItem;
 import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SAGraphActivity extends Activity
 {
+    private int mYMaxCount = 1000;
     private ListView mListView = null;
     private GraphListViewAdapter mAdapter = null;
 
@@ -34,12 +44,15 @@ public class SAGraphActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_graph);
 
-        drawGraph();
-
         mListView = (ListView) findViewById(R.id.graphlistview);
-        mAdapter = new GraphListViewAdapter(this);
-        mAdapter.setData(AppInfo.getApplicatonInfoList(this));
-        mListView.setAdapter(mAdapter);
+
+        ProgressBar progressBarempty = (ProgressBar)this.findViewById(R.id.emptyprogress);
+        mListView.setEmptyView(progressBarempty);
+
+        AppListAsyncTask appListAsyncTask = new AppListAsyncTask();
+        appListAsyncTask.execute();
+
+        drawGraph();
 	}
 
     private void drawGraph()
@@ -52,13 +65,21 @@ public class SAGraphActivity extends Activity
         if(cursor == null)
             return;
         cursor.moveToFirst();
+
         do
         {
             String day = cursor.getString(0);
             String count = cursor.getString(1);
             daylist.add(count);
+
+            if(mYMaxCount < Integer.valueOf(count).intValue())
+            {
+                mYMaxCount = Integer.valueOf(count).intValue();
+            }
         }
         while(cursor.moveToNext());
+
+        cursor.close();
 
         while(daylist.size() < 31)
         {
@@ -103,7 +124,7 @@ public class SAGraphActivity extends Activity
         // set manual X bounds
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(1);
-        graph.getViewport().setMaxY(1000);
+        graph.getViewport().setMaxY(mYMaxCount + 100);
 
         graph.getViewport().setXAxisBoundsManual(false);
         graph.getViewport().setMinX(26);
@@ -144,4 +165,116 @@ public class SAGraphActivity extends Activity
         graph.addSeries(series3);
     }
 
+    private class AppListAsyncTask extends AsyncTask<Void, Integer, ArrayList<ListViewItem>>
+    {
+        private int mMaxCount = 0;
+        private ProgressBar mProgressBar = null;
+        private List<ApplicationInfo> mAppList = null;
+        private PackageManager mPm = null;
+
+        @Override
+        protected void onPreExecute()
+        {
+            mProgressBar = (ProgressBar)findViewById(R.id.progressbar);
+
+            mPm = SAGraphActivity.this.getPackageManager();
+            mAppList = mPm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES
+                    | PackageManager.GET_DISABLED_COMPONENTS);
+
+            mProgressBar.setMax(mAppList.size());
+        }
+
+        @Override
+        protected ArrayList<ListViewItem> doInBackground(Void... params)
+        {
+            AppInfo.AppFilter filter;
+            switch (AppInfo.MENU_MODE)
+            {
+                case AppInfo.MENU_DOWNLOAD:
+                    filter = AppInfo.THIRD_PARTY_FILTER;
+                    break;
+                default:
+                    filter = null;
+                    break;
+            }
+
+            if (filter != null)
+            {
+                filter.init();
+            }
+
+            int i = 0;
+            ListViewItem addInfo = null;
+            ApplicationInfo info = null;
+            ArrayList<ListViewItem> listAppInfoData = new ArrayList<ListViewItem>();
+
+            DbHandler handler = new DbHandler(SAGraphActivity.this);
+            Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_PACKAGE_NOTI_INFO, null);
+            cursor.moveToFirst();
+            String packagename = null;
+            String noticount = null;
+
+            do
+            {
+                addInfo = new ListViewItem();
+                packagename = cursor.getString(0);
+                noticount = cursor.getString(1);
+
+                addInfo.mPackageName = packagename;
+                addInfo.mNotiCount = Integer.valueOf(noticount).intValue();
+
+                if(mMaxCount < Integer.valueOf(noticount).intValue())
+                {
+                    mMaxCount = Integer.valueOf(noticount).intValue();
+                }
+                listAppInfoData.add(addInfo);
+            }
+            while(cursor.moveToNext());
+
+            for (ApplicationInfo app : mAppList)
+            {
+
+                    for(ListViewItem item : listAppInfoData)
+                    {
+                        if(item.mPackageName.equals(app.packageName))
+                        {
+                            if(app.loadLabel(mPm).toString().length() == 0)
+                            {
+                                item.mAppName = app.packageName;
+                            }
+                            else
+                            {
+                                item.mAppName = app.loadLabel(mPm).toString();
+                            }
+
+                            item.mAppIcon =  app.loadIcon(mPm);
+                            break;
+                        }
+                    }
+
+                i++;
+                this.publishProgress(i);
+            }
+
+            cursor.close();
+
+            return listAppInfoData;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mProgressBar.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ListViewItem> aListArray)
+        {
+            mAdapter = new GraphListViewAdapter(SAGraphActivity.this);
+            mAdapter.setData(aListArray);
+            mAdapter.setMacCount(mMaxCount);
+            mListView.setAdapter(mAdapter);
+
+            mProgressBar.setVisibility(View.GONE);
+        }
+    }
 }

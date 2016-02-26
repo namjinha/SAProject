@@ -1,11 +1,13 @@
 package com.namleesin.smartalert.graph;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
@@ -18,10 +20,13 @@ import java.util.ArrayList;
  */
 public class GraphListViewAdapter extends BaseAdapter
 {
+    private int mMaxCount = 0;
     private class ViewHolder
     {
         public ImageView imageview;
         public TextView textview;
+        public ProgressBar progressBar;
+        public TextView conttextview;
     }
 
     private Context mContext = null;
@@ -36,6 +41,11 @@ public class GraphListViewAdapter extends BaseAdapter
     public void setData(ArrayList<ListViewItem> aListData)
     {
         this.mListData = aListData;
+    }
+
+    public void setMacCount(int aMaxCount)
+    {
+        mMaxCount = aMaxCount;
     }
 
     @Override
@@ -64,10 +74,13 @@ public class GraphListViewAdapter extends BaseAdapter
             holder = new ViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.noti_listitem, null);
+            convertView = inflater.inflate(R.layout.graph_listitem, null);
 
             holder.imageview = (ImageView) convertView.findViewById(R.id.appicon);
             holder.textview = (TextView) convertView.findViewById(R.id.appname);
+            holder.conttextview = (TextView) convertView.findViewById(R.id.appcounttxt);
+            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressbar);
+            holder.progressBar.setMax(mMaxCount);
 
             convertView.setTag(holder);
         }
@@ -84,10 +97,14 @@ public class GraphListViewAdapter extends BaseAdapter
         }
         else
         {
-            holder.imageview.setVisibility(View.GONE);
+            holder.imageview.setImageResource(R.drawable.ic_launcher);
         }
 
+        Log.d("namjinha", "data.mNotiCount = " + data.mNotiCount);
         holder.textview.setText(data.mAppName);
+        holder.conttextview.setText("" + data.mNotiCount);
+
+        holder.progressBar.setProgress(data.mNotiCount);
 
         return convertView;
     }

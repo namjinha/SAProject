@@ -80,6 +80,8 @@ public class DbHandler
 				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_INFO, selectionArgs);
 			case DBValue.TYPE_SELECT_DAILY_NOTI_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_DAILY_NOTI_INFO, null);
+			case DBValue.TYPE_SELECT_PACKAGE_NOTI_INFO:
+				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_NOTI_COUNT, null);
 			default:
 				break;
 		}
