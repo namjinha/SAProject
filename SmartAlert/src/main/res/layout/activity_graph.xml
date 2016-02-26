@@ -12,11 +12,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<com.namleesin.smartalert.commonView.PullDownInputView
-			android:id="@+id/pulldownView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-
 		<com.namleesin.smartalert.commonView.ActionBarView
 			custom:actionbarType="activity"
 			custom:actionbarTitle="Graph"
@@ -25,12 +20,22 @@
 			android:background="@color/bg7"/>
 	</FrameLayout>
 
+	<ProgressBar
+		android:id="@+id/progressbar"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_width="match_parent"
+		android:layout_height="5dp"
+		android:background="@color/bg7"
+		android:progressDrawable="@xml/progress_color"
+		android:max="100"
+		android:progress="10"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-    	android:layout_height="match_parent"
+    	android:layout_height="0dp"
     	android:orientation="vertical"
-		android:background="#034662"
-		android:layout_weight="4">
+		android:background="@color/bg7"
+		android:layout_weight="6">
 	    <com.jjoe64.graphview.GraphView
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -39,11 +44,27 @@
 	        android:layout_marginBottom="10dp"
 	        android:id="@+id/graph" />
 	</LinearLayout>
+
     <LinearLayout
 		android:layout_width="match_parent"
-   		android:layout_height="match_parent"
+   		android:layout_height="0dp"
    		android:orientation="vertical"
 		android:background="#ffffff"
-		android:layout_weight="6">
+		android:gravity="center"
+		android:layout_weight="4">
+
+		<ListView
+			android:id="@+id/graphlistview"
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:divider="@color/bg6"
+			android:dividerHeight="1dp"
+			android:choiceMode="singleChoice"/>
+
+		<ProgressBar
+			android:id="@+id/emptyprogress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
     </LinearLayout>
 </LinearLayout>

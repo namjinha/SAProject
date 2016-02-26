@@ -11,6 +11,8 @@ public class ListViewItem
 {
     public String mAppName = null;
     public Drawable mAppIcon  = null;
+    public String mPackageName = null;
+    public int mNotiCount = 0;
 /*
     public ListViewItem(String aAppName, Drawable aAppIcon)
     {
