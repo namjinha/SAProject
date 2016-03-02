@@ -8,6 +8,8 @@ public class MainValue
 	public static final int RES_ALERT_ACCESS					= 3;
 	public static final int RES_SL_SETTING						= 4;
 
-	public static final int MENU_ITEM_SPAM_ALERT				= 1;
-	public static final int MENU_ITEM_LIKE_ALERT				= 2;
+	public static final int MENU_ITEM_SPAM_ALERT				= 0;
+	public static final int MENU_ITEM_LIKE_ALERT				= 1;
+
+	public static final String SET_INDEX_NUMBER				= "index_number";
 }

@@ -2,6 +2,7 @@ package com.namleesin.smartalert.main;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -247,6 +248,12 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if(resultCode == Activity.RESULT_CANCELED)
+		{
+			finish();
+			return;
+		}
+
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
 		{
@@ -369,10 +376,10 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		switch(position)
 		{
 			case MainValue.MENU_ITEM_SPAM_ALERT:
-				OpenActivity.startSpamSettingActivity(this);
+				OpenActivity.openSpamSettingActivity(this, 0);
 				break;
 			case MainValue.MENU_ITEM_LIKE_ALERT:
-				OpenActivity.startSpamSettingActivity(this);
+				OpenActivity.openSpamSettingActivity(this, 2);
 				break;
 			default:
 				break;

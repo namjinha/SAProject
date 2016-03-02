@@ -148,7 +148,7 @@ public class NotificationListener extends NotificationListenerService
 
 		if(isPrivacyMode())
 		{
-			cancelAllNotifications();
+			//cancelAllNotifications();
 		}
 	}
 }

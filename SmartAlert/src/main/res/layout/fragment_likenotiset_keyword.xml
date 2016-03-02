@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="@color/bg4">
 
-    <com.namleesin.smartalert.commonView.ActionBarView
+    <include
+        android:id="@+id/actionbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        custom:actionbarTitle="똑똑한 알림"
-        custom:actionbarType="activity">
-    </com.namleesin.smartalert.commonView.ActionBarView>
+        android:layout_height="48dp"
+        layout="@layout/layout_notiset_action_bar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="2">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,39 +45,59 @@
                 android:textColor="@color/bg7"/>
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="4"
             android:weightSum="12">
-
-            <com.namleesin.smartalert.commonView.PullDownInputView
-                android:id="@+id/pulldownView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.namleesin.smartalert.commonView.PullDownInputView>
-
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
+                android:layout_weight="10"
                 android:textSize="15sp"
                 android:textColor="@color/bg7"
-                android:background="@color/bg4"
                 android:text="키우드를 설정하여 관심 있는 알림을 모아 보세요!"/>
-        </FrameLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="4"
+            >
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="12">
 
+                <com.namleesin.smartalert.commonView.PullDownInputView
+                    android:id="@+id/pulldownView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </com.namleesin.smartalert.commonView.PullDownInputView>
+            </FrameLayout>
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="12">
+            <ListView
+                android:id="@+id/listview"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:divider="@color/bg6"
+                android:dividerHeight="1dp"
+                android:choiceMode="singleChoice"/>
         </LinearLayout>
-        <Button
-            android:id="@+id/notisetlikekeywordbtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:textSize="22sp"
-            android:text="다 음"/>
     </LinearLayout>
 </LinearLayout>

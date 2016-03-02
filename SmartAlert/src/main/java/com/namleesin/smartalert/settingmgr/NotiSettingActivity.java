@@ -4,9 +4,12 @@ package com.namleesin.smartalert.settingmgr;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.namleesin.smartalert.R;
@@ -27,6 +31,8 @@ import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.data.KeywordData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
+import com.namleesin.smartalert.graph.GraphListViewAdapter;
+import com.namleesin.smartalert.main.MainValue;
 import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
@@ -34,9 +40,10 @@ import java.util.List;
 
 public class NotiSettingActivity extends Activity
 {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private static ViewPager mViewPager;
-    private static Activity mActivity;
+    private SectionsPagerAdapter mSectionsPagerAdapter = null;
+    private static ViewPager mViewPager = null;
+    private static Activity mActivity = null;
+    private int mNextIdx = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,6 +56,33 @@ public class NotiSettingActivity extends Activity
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mActivity = NotiSettingActivity.this;
+
+        Intent i = getIntent();
+        if(null != i)
+        {
+            int index = i.getIntExtra(MainValue.SET_INDEX_NUMBER, 0);
+            mViewPager.setCurrentItem(index);
+        }
+
+        Button gonebtn = (Button)findViewById(R.id.nextbtn);
+        gonebtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mNextIdx = mViewPager.getCurrentItem();
+
+                mNextIdx++;
+
+                if(mNextIdx > 2)
+                {
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                    return;
+                }
+                mViewPager.setCurrentItem(mNextIdx);
+            }
+        });
     }
 
     @Override
@@ -74,6 +108,83 @@ public class NotiSettingActivity extends Activity
     {
         private ListView mListView = null;
         private ListViewAdapter mAdapter = null;
+        private View mRootView = null;
+
+        private class AppListAsyncTask extends AsyncTask<Void, Integer, ArrayList<ListViewItem>>
+        {
+            private int mMaxCount = 0;
+            private ProgressBar mProgressBar = null;
+            private List<ApplicationInfo> mAppList = null;
+            private PackageManager mPm = null;
+
+            @Override
+            protected void onPreExecute()
+            {
+                mProgressBar = (ProgressBar)mRootView.findViewById(R.id.progressbar);
+
+                mPm = getActivity().getPackageManager();
+                mAppList = mPm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES
+                        | PackageManager.GET_DISABLED_COMPONENTS);
+
+                mProgressBar.setMax(mAppList.size());
+            }
+
+            @Override
+            protected ArrayList<ListViewItem> doInBackground(Void... params)
+            {
+                AppInfo.AppFilter filter;
+                switch (AppInfo.MENU_MODE)
+                {
+                    case AppInfo.MENU_DOWNLOAD:
+                        filter = AppInfo.THIRD_PARTY_FILTER;
+                        break;
+                    default:
+                        filter = null;
+                        break;
+                }
+
+                if (filter != null)
+                {
+                    filter.init();
+                }
+
+                int i = 0;
+                ApplicationInfo info = null;
+                ArrayList<ListViewItem> listAppInfoData = new ArrayList<ListViewItem>();
+
+                for (ApplicationInfo app : mAppList)
+                {
+                    info = app;
+                    if (filter == null || filter.filterApp(info))
+                    {
+                        ListViewItem addInfo = new ListViewItem();
+                        addInfo.mPackageName = app.packageName;
+                        addInfo.mAppIcon = app.loadIcon(mPm);
+                        addInfo.mAppName = app.loadLabel(mPm).toString();
+                        listAppInfoData.add(addInfo);
+                    }
+                    i++;
+                    this.publishProgress(i);
+                }
+
+                return listAppInfoData;
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                mProgressBar.setProgress(values[0]);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<ListViewItem> aListArray)
+            {
+                mAdapter = new ListViewAdapter(getActivity().getApplicationContext());
+                mAdapter.setData(aListArray);
+                mListView.setAdapter(mAdapter);
+
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
 
         public NotiSpamSetAppFragment() {
         }
@@ -86,27 +197,19 @@ public class NotiSettingActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_spamnotiset_app, container, false);
+            mRootView = inflater.inflate(R.layout.fragment_spamnotiset_app, container, false);
 
-            mListView = (ListView) rootView.findViewById(R.id.listview);
-            mAdapter = new ListViewAdapter(getActivity().getApplicationContext());
-            mAdapter.setData(AppInfo.getApplicatonInfoList(getActivity()));
-            mListView.setAdapter(mAdapter);
+            mListView = (ListView)mRootView.findViewById(R.id.listview);
+            ProgressBar progressBarempty = (ProgressBar)mRootView.findViewById(R.id.emptyprogress);
+            mListView.setEmptyView(progressBarempty);
 
-            Button spamsetappBtn = (Button) rootView.findViewById(R.id.notisetspamappbtn);
-            spamsetappBtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mViewPager.setCurrentItem(1);
-                }
-            });
+            AppListAsyncTask appListAsyncTask = new AppListAsyncTask();
+            appListAsyncTask.execute();
 
-            Button apptabBtn = (Button) rootView.findViewById(R.id.tab01);
+            Button apptabBtn = (Button) mRootView.findViewById(R.id.tab01);
             apptabBtn.setPressed(true);
 
-            Button keywordtabBtn = (Button) rootView.findViewById(R.id.tab02);
+            Button keywordtabBtn = (Button) mRootView.findViewById(R.id.tab02);
             keywordtabBtn.setPressed(false);
             keywordtabBtn.setOnClickListener(new View.OnClickListener()
             {
@@ -117,7 +220,7 @@ public class NotiSettingActivity extends Activity
                 }
             });
 
-            return rootView;
+            return mRootView;
         }
     }
 
@@ -147,24 +250,16 @@ public class NotiSettingActivity extends Activity
             mAdapter.setData(getKeywordData());
             mListView.setAdapter(mAdapter);
 
-            Button spamsetkeywordBtn = (Button)rootView.findViewById(R.id.notisetspamkeywordbtn);
-            spamsetkeywordBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewPager.setCurrentItem(2);
-                }
-            });
-
             PullDownInputView pullDownInputView = (PullDownInputView) rootView.findViewById(R.id.pulldownView);
             pullDownInputView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
-                    Log.d("NJ Lee", "input : "+input);
+                    Log.d("NJ Lee", "input : " + input);
                     DbHandler handler = new DbHandler(mActivity);
                     KeywordData keywordData = new KeywordData().setKeywordata(input)
                             .setKeywordstatus(DBValue.STATUS_DISLIKE);
                     handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
-                    Toast.makeText(mActivity, input+" 추가 되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, input + " 추가 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -216,13 +311,6 @@ public class NotiSettingActivity extends Activity
         {
 
             View rootView = inflater.inflate(R.layout.fragment_likenotiset_keyword, container, false);
-            Button likesetkeywordBtn = (Button)rootView.findViewById(R.id.notisetlikekeywordbtn);
-            likesetkeywordBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mActivity.finish();
-                }
-            });
 
             PullDownInputView pulldownView = (PullDownInputView) rootView.findViewById(R.id.pulldownView);
             pulldownView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {

@@ -45,5 +45,12 @@ public class OpenActivity
 	{
 		Intent i = new Intent(aContext, SAGraphActivity.class);
 		((Activity)aContext).startActivity(i);
-	}	
+	}
+
+	public static void openSpamSettingActivity(Context aContext, int aIndex)
+	{
+		Intent i = new Intent(aContext, NotiSettingActivity.class);
+		i.putExtra(MainValue.SET_INDEX_NUMBER, aIndex);
+		((Activity) aContext).startActivity(i);
+	}
 }
