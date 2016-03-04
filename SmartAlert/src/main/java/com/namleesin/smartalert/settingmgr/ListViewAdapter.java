@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class ListViewAdapter extends BaseAdapter
     {
         public ImageView imageview;
         public TextView textview;
+        public CheckBox checkBox;
     }
 
     private Context mContext = null;
@@ -64,6 +66,7 @@ public class ListViewAdapter extends BaseAdapter
 
             holder.imageview = (ImageView) convertView.findViewById(R.id.appicon);
             holder.textview = (TextView) convertView.findViewById(R.id.appname);
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkstate);
 
             convertView.setTag(holder);
         }
@@ -84,6 +87,15 @@ public class ListViewAdapter extends BaseAdapter
         }
 
         holder.textview.setText(data.mAppName);
+
+        if(1 == data.mFilterState)
+        {
+            holder.checkBox.setChecked(true);
+        }
+        else
+        {
+            holder.checkBox.setChecked(false);
+        }
 
         return convertView;
     }

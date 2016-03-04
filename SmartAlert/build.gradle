@@ -4,7 +4,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "19.1.0"
     defaultConfig {
-        applicationId "com.namleesin.smartalert"
+        applicationId "com.hundred2016.smartalert"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 2

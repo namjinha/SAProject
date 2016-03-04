@@ -77,7 +77,7 @@ public class DbHandler
 			case DBValue.TYPE_SELECT_FILTERWORD_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_FILTERWORD_INFO, selectionArgs);
 			case DBValue.TYPE_SELECT_FILTERPKG_INFO:
-				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_INFO, selectionArgs);
+				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_INFO, null);
 			case DBValue.TYPE_SELECT_DAILY_NOTI_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_DAILY_NOTI_INFO, null);
 			case DBValue.TYPE_SELECT_PACKAGE_NOTI_INFO:
@@ -109,13 +109,75 @@ public class DbHandler
 		
 		return result;
 	}
-	
+
+	public int deleteDB(int aDeleteType, Object aObject)
+	{
+		int result = DBValue.SUCCESS;
+
+		switch(aDeleteType)
+		{
+			case DBValue.TYPE_DELETE_FILTER_APP:
+				result = deleteFilterAppTalble((PackData) aObject);
+				break;
+			case DBValue.TYPE_DELETE_FILTER_KEYWORD:
+				result = deleteFilterKeywordTable((KeywordData) aObject);
+				break;
+			default:
+				break;
+		}
+
+		return result;
+	}
+	private int deleteFilterAppTalble(PackData aPackData)
+	{
+		String[] params = getFilterPackData(aPackData);
+		return handleDBData(DBValue.SQL_DELETE_FILTER_APP, params);
+	}
+
+	private int deleteFilterKeywordTable(KeywordData aKeywordData)
+	{
+		String[] params = getFilterKeywordData(aKeywordData);
+		return handleDBData(DBValue.SQL_DELETE_FILTER_KEYWORD, params);
+	}
+
 	private int insertNotiInfoTable(NotiData aNotiData)
 	{
 		String[] params = getNotiData(aNotiData);
 		return handleDBData(DBValue.SQL_INSRT_NOTIDATA, params);
 	}
-	
+
+	private String[] getFilterKeywordData(KeywordData aKeywordData)
+	{
+		if(null == aKeywordData)
+		{
+			return null;
+		}
+
+		String[] params =
+				{
+						aKeywordData.keywordata + "",
+						String.valueOf(aKeywordData.keyword_status)
+				};
+
+		return params;
+	}
+
+	private String[] getFilterPackData(PackData aPackData)
+	{
+		if(null == aPackData)
+		{
+			return null;
+		}
+
+		String[] params =
+				{
+						aPackData.packagename + "",
+						String.valueOf(aPackData.package_status)
+				};
+
+		return params;
+	}
+
 	private String[] getNotiData(NotiData aNotiData)
 	{
 		if(null == aNotiData)
@@ -155,7 +217,7 @@ public class DbHandler
 		String[] params =
 		{
 				aKeywordData.keywordata + "",
-			String.valueOf(aKeywordData.keywordstatus)
+			String.valueOf(aKeywordData.keyword_status)
 		};
 		
 		return params;
@@ -177,7 +239,7 @@ public class DbHandler
 		String[] params =
 		{
 			aPackData.packagename + "",
-			String.valueOf(aPackData.packagestatus)
+			String.valueOf(aPackData.package_status)
 		};
 		
 		return params;

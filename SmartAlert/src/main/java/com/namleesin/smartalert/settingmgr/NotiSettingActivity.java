@@ -21,7 +21,9 @@ import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,6 +31,8 @@ import android.widget.Toast;
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.data.KeywordData;
+import com.namleesin.smartalert.data.NotiData;
+import com.namleesin.smartalert.data.PackData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.graph.GraphListViewAdapter;
@@ -104,11 +108,34 @@ public class NotiSettingActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    public static class NotiSpamSetAppFragment extends Fragment
+    public static class NotiSpamSetAppFragment extends Fragment implements AdapterView.OnItemClickListener
     {
         private ListView mListView = null;
         private ListViewAdapter mAdapter = null;
         private View mRootView = null;
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            DbHandler handler = new DbHandler(getActivity().getApplicationContext());
+
+            PackData packdata = new PackData();
+            packdata.packagename = ((ListViewItem) mAdapter.getItem(position)).mPackageName;
+
+            CheckBox checkstate = (CheckBox) view.findViewById(R.id.checkstate);
+            if (true == checkstate.isChecked())
+            {
+                Log.d("namjinha", "ret = " + checkstate.isChecked());
+                Log.d("namjinha", "packdata.packagename = " + packdata.packagename);
+                checkstate.setChecked(false);
+                handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
+            }
+            else
+            {
+                checkstate.setChecked(true);
+                handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
+            }
+        }
 
         private class AppListAsyncTask extends AsyncTask<Void, Integer, ArrayList<ListViewItem>>
         {
@@ -152,6 +179,20 @@ public class NotiSettingActivity extends Activity
                 ApplicationInfo info = null;
                 ArrayList<ListViewItem> listAppInfoData = new ArrayList<ListViewItem>();
 
+                ArrayList<String> packagelist = new ArrayList<String>();
+                DbHandler handler = new DbHandler(getActivity().getApplicationContext());
+                Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERPKG_INFO, null);
+                if(null != cursor && cursor.getCount() > 0)
+                {
+                    cursor.moveToFirst();
+                    do
+                    {
+                        String packagename = cursor.getString(0);
+                        packagelist.add(packagename);
+                    }
+                    while (cursor.moveToNext());
+                }
+
                 for (ApplicationInfo app : mAppList)
                 {
                     info = app;
@@ -161,6 +202,12 @@ public class NotiSettingActivity extends Activity
                         addInfo.mPackageName = app.packageName;
                         addInfo.mAppIcon = app.loadIcon(mPm);
                         addInfo.mAppName = app.loadLabel(mPm).toString();
+
+                        if(true == packagelist.contains(addInfo.mPackageName))
+                        {
+                            addInfo.mFilterState = 1;
+                        }
+
                         listAppInfoData.add(addInfo);
                     }
                     i++;
@@ -202,6 +249,7 @@ public class NotiSettingActivity extends Activity
             mListView = (ListView)mRootView.findViewById(R.id.listview);
             ProgressBar progressBarempty = (ProgressBar)mRootView.findViewById(R.id.emptyprogress);
             mListView.setEmptyView(progressBarempty);
+            mListView.setOnItemClickListener(this);
 
             AppListAsyncTask appListAsyncTask = new AppListAsyncTask();
             appListAsyncTask.execute();

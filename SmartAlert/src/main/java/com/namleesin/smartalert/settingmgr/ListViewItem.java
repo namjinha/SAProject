@@ -13,6 +13,7 @@ public class ListViewItem
     public Drawable mAppIcon  = null;
     public String mPackageName = null;
     public int mNotiCount = 0;
+    public int mFilterState = 0;
 /*
     public ListViewItem(String aAppName, Drawable aAppIcon)
     {
