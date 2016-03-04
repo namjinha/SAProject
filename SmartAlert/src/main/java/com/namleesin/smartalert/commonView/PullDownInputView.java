@@ -11,8 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -21,7 +21,7 @@ import com.namleesin.smartalert.R;
 /**
  * Created by nanjui on 2016. 1. 30..
  */
-public class PullDownInputView extends LinearLayout implements View.OnTouchListener,
+public class PullDownInputView extends FrameLayout implements View.OnTouchListener,
                                                                View.OnClickListener
 
 {
@@ -57,6 +57,9 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
         ImageButton addBtn = (ImageButton) findViewById(R.id.add_btn);
         addBtn.setOnClickListener(this);
 
+        View view = findViewById(R.id.handle);
+        view.setOnTouchListener(this);
+
         LinearLayout close_layout = (LinearLayout) findViewById(R.id.close);
         close_layout.setOnClickListener(this);
     }
@@ -65,6 +68,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
     public boolean onInterceptTouchEvent(MotionEvent event)
     {
         final int action = MotionEventCompat.getActionMasked(event);
+        Log.d("NJ LEE", "action : "+action);
         if(isInputboxShown == true)
             return false;
 
@@ -91,7 +95,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
                     View close_layout = findViewById(R.id.close);
                     close_layout.setVisibility(View.VISIBLE);
                 }
-                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)h));
+                temp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) h));
                 break;
             case MotionEvent.ACTION_MOVE:
                 mDistance = Math.abs(mY - event.getY());
@@ -100,7 +104,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
                     mDistance = mMaxHeight;
                 }
                 mDistance *= 0.9;
-                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mDistance));
+                temp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mDistance));
                 break;
         }
         return false;
@@ -126,42 +130,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int action = event.getAction();
-        if(isInputboxShown == true)
-            return false;
-
-        View temp = findViewById(R.id.view_temp);
-        switch (action)
-        {
-            case MotionEvent.ACTION_DOWN:
-                mY = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                float h = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 54, getResources().getDisplayMetrics());
-                if(mDistance < h)
-                {
-                    h = 0;
-                }
-                else
-                {
-                    isInputboxShown = true;
-                    EditText edit = (EditText) findViewById(R.id.keyword);
-                    edit.setEnabled(true);
-                }
-                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)h));
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-                mDistance = Math.abs(mY - event.getY());
-                if(mDistance > mMaxHeight)
-                {
-                    mDistance = mMaxHeight;
-                }
-                mDistance *= 0.9;
-                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mDistance));
-                break;
-        }
-        return false;
+        return true;
     }
 
     @Override
@@ -172,7 +141,7 @@ public class PullDownInputView extends LinearLayout implements View.OnTouchListe
             case R.id.close:
                 isInputboxShown = false;
                 View temp = findViewById(R.id.view_temp);
-                temp.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mOriginalHeight));
+                temp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)mOriginalHeight));
                 findViewById(R.id.close).setVisibility(View.GONE);
                 findViewById(R.id.pulldown).setVisibility(View.VISIBLE);
                 break;
