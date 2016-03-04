@@ -2,6 +2,7 @@ package com.namleesin.smartalert.main;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -29,6 +30,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.ActionBarView;
 import com.namleesin.smartalert.dbmgr.DBValue;
@@ -43,7 +47,11 @@ import com.namleesin.smartalert.utils.PFValue;
 
 public class MainActivity extends FragmentActivity implements DrawerListener,
 		LoaderCallbacks<ArrayList<NotiInfoData>>,
-		AdapterView.OnItemClickListener{
+		AdapterView.OnItemClickListener
+{
+	private final String AD_UNIT_ID = "ca-app-pub-6738646161258413/2235663683";
+	private InterstitialAd interstitialAd = null;
+
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
@@ -53,6 +61,7 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	private View mRemainLayout;
 	private boolean mIsListExpanded = false;
 	private ActionBarView mActionbar;
+
 	private ViewTreeObserver.OnGlobalLayoutListener mLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
 		@Override
 		public void onGlobalLayout() {
@@ -79,6 +88,33 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onResume();
 		getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		AdRequest adRequest = new AdRequest.Builder().build();
+		interstitialAd = new InterstitialAd(this);
+		interstitialAd.setAdUnitId(AD_UNIT_ID);
+		interstitialAd.loadAd(adRequest);
+		interstitialAd.setAdListener(new AdListener() {
+			@Override
+			public void onAdLoaded() {
+				if (interstitialAd.isLoaded()) {
+					interstitialAd.show();
+				}
+			}
+
+			@Override
+			public void onAdOpened() {
+				finish();
+			}
+
+			@Override
+			public void onAdFailedToLoad(int errorCode) {
+				finish();
+			}
+		});
 	}
 
 	private void initView()
@@ -269,6 +305,12 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if(resultCode == Activity.RESULT_CANCELED)
+		{
+			finish();
+			return;
+		}
+
 		PFMgr pmgr = new PFMgr(this);
 		switch(requestCode)
 		{
@@ -391,10 +433,10 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		switch(position)
 		{
 			case MainValue.MENU_ITEM_SPAM_ALERT:
-				OpenActivity.startSpamSettingActivity(this);
+				OpenActivity.openSpamSettingActivity(this, 0);
 				break;
 			case MainValue.MENU_ITEM_LIKE_ALERT:
-				OpenActivity.startSpamSettingActivity(this);
+				OpenActivity.openSpamSettingActivity(this, 2);
 				break;
 			default:
 				break;

@@ -32,7 +32,7 @@ public class SplashScreenActivity extends Activity
 		@Override
 		public void run()
 		{
-			setResult(RESULT_OK);
+			setResult(Activity.RESULT_OK);
 			finish();
 		}		
 	};

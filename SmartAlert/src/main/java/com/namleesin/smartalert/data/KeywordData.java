@@ -3,7 +3,7 @@ package com.namleesin.smartalert.data;
 public class KeywordData
 {
 	public String keywordata = null;
-	public int keywordstatus = 0;
+	public int keyword_status = 0;
 
 	public String getKeywordata() {
 		return keywordata;
@@ -15,11 +15,11 @@ public class KeywordData
 	}
 
 	public int getKeywordstatus() {
-		return keywordstatus;
+		return keyword_status;
 	}
 
 	public KeywordData setKeywordstatus(int keywordstatus) {
-		this.keywordstatus = keywordstatus;
+		this.keyword_status = keywordstatus;
 		return this;
 	}
 }

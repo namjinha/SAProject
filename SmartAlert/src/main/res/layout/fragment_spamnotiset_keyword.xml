@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="@color/bg4">
 
     <include
         android:id="@+id/actionbar"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="2">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:weightSum="12">
             <TextView
                 android:layout_width="0dp"
@@ -66,11 +66,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="24dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:weightSum="2"
             android:orientation="horizontal">
@@ -107,12 +106,6 @@
                     android:id="@+id/pulldownView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-
-                <com.namleesin.smartalert.commonView.ActionBarView
-                    custom:actionbarType="activity"
-                    custom:actionbarTitle="Graph"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp" />
             </FrameLayout>
 
             <ListView
@@ -122,29 +115,6 @@
                 android:divider="@color/bg6"
                 android:dividerHeight="1dp"
                 android:choiceMode="singleChoice"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:gravity="center"
-            android:layout_weight="2"
-            android:weightSum="12">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/notisetspamkeywordbtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="10"
-                android:textSize="22sp"
-                android:text="다 음"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

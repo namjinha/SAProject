@@ -22,9 +22,10 @@ import com.namleesin.smartalert.R;
 
 public class GuideMgrActivity extends Activity
 {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private static ViewPager mViewPager;
-    private static Activity mActivity;
+    private SectionsPagerAdapter mSectionsPagerAdapter = null;
+    private static ViewPager mViewPager = null;
+    private static Activity mActivity = null;
+    private int mNextIdx = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,12 +39,34 @@ public class GuideMgrActivity extends Activity
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mActivity = GuideMgrActivity.this;
+
+        Button gonebtn = (Button)findViewById(R.id.nextbtn);
+        gonebtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mNextIdx = mViewPager.getCurrentItem();
+
+                mNextIdx++;
+
+                if(mNextIdx > 2)
+                {
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                    return;
+                }
+                mViewPager.setCurrentItem(mNextIdx);
+            }
+        });
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         finish();
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_guide_mgr_activiy, menu);
@@ -82,15 +105,6 @@ public class GuideMgrActivity extends Activity
                                  Bundle savedInstanceState)
         {
             View rootView = inflater.inflate(R.layout.fragment_guide01, container, false);
-            Button gonebtn = (Button)rootView.findViewById(R.id.gonebtn);
-            gonebtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mViewPager.setCurrentItem(1);
-                }
-            });
             return rootView;
         }
     }
@@ -112,15 +126,6 @@ public class GuideMgrActivity extends Activity
                                  Bundle savedInstanceState)
         {
             View rootView = inflater.inflate(R.layout.fragment_guide02, container, false);
-            Button gtwobtn = (Button)rootView.findViewById(R.id.gtwobtn);
-            gtwobtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mViewPager.setCurrentItem(2);
-                }
-            });
             return rootView;
         }
     }
@@ -142,16 +147,6 @@ public class GuideMgrActivity extends Activity
                                  Bundle savedInstanceState)
         {
             View rootView = inflater.inflate(R.layout.fragment_guide03, container, false);
-            Button gthreebtn = (Button)rootView.findViewById(R.id.gthreebtn);
-            gthreebtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mActivity.setResult(mActivity.RESULT_OK);
-                    mActivity.finish();
-                }
-            });
             return rootView;
         }
     }
