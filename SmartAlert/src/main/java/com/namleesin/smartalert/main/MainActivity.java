@@ -107,14 +107,14 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 			@Override
 			public void onAdOpened() {
-				finish();
 			}
 
 			@Override
 			public void onAdFailedToLoad(int errorCode) {
-				finish();
 			}
 		});
+
+		finish();
 	}
 
 	private void initView()

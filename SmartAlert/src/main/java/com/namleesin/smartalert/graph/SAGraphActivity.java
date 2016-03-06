@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -187,22 +188,6 @@ public class SAGraphActivity extends Activity
         @Override
         protected ArrayList<ListViewItem> doInBackground(Void... params)
         {
-            AppInfo.AppFilter filter;
-            switch (AppInfo.MENU_MODE)
-            {
-                case AppInfo.MENU_DOWNLOAD:
-                    filter = AppInfo.THIRD_PARTY_FILTER;
-                    break;
-                default:
-                    filter = null;
-                    break;
-            }
-
-            if (filter != null)
-            {
-                filter.init();
-            }
-
             int i = 0;
             ListViewItem addInfo = null;
             ApplicationInfo info = null;
@@ -233,7 +218,6 @@ public class SAGraphActivity extends Activity
 
             for (ApplicationInfo app : mAppList)
             {
-
                     for(ListViewItem item : listAppInfoData)
                     {
                         if(item.mPackageName.equals(app.packageName))
