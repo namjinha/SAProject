@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +30,9 @@ import android.widget.Toast;
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.data.KeywordData;
-import com.namleesin.smartalert.data.NotiData;
 import com.namleesin.smartalert.data.PackData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
-import com.namleesin.smartalert.graph.GraphListViewAdapter;
 import com.namleesin.smartalert.main.MainValue;
 import com.namleesin.smartalert.utils.AppInfo;
 
@@ -104,9 +101,9 @@ public class NotiSettingActivity extends Activity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
 
     public static class NotiSpamSetAppFragment extends Fragment implements AdapterView.OnItemClickListener
     {
@@ -276,6 +273,7 @@ public class NotiSettingActivity extends Activity
     {
         private ListView mListView = null;
         private ListViewAdapter mAdapter = null;
+        private View mRootView;
 
         public NotiSpamSetKeywordFragment()
         {
@@ -291,14 +289,14 @@ public class NotiSettingActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState)
         {
-            View rootView = inflater.inflate(R.layout.fragment_spamnotiset_keyword, container, false);
+            mRootView = inflater.inflate(R.layout.fragment_spamnotiset_keyword, container, false);
 
-            mListView = (ListView) rootView.findViewById(R.id.listview);
+            mListView = (ListView) mRootView.findViewById(R.id.listview);
             mAdapter = new ListViewAdapter(getActivity().getApplicationContext());
             mAdapter.setData(getKeywordData());
             mListView.setAdapter(mAdapter);
 
-            PullDownInputView pullDownInputView = (PullDownInputView) rootView.findViewById(R.id.pulldownView);
+            PullDownInputView pullDownInputView = (PullDownInputView) mRootView.findViewById(R.id.pulldownView);
             pullDownInputView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
@@ -311,7 +309,7 @@ public class NotiSettingActivity extends Activity
                 }
             });
 
-            Button apptabBtn = (Button) rootView.findViewById(R.id.tab01);
+            Button apptabBtn = (Button) mRootView.findViewById(R.id.tab01);
             apptabBtn.setPressed(false);
             apptabBtn.setOnClickListener(new View.OnClickListener()
             {
@@ -322,10 +320,23 @@ public class NotiSettingActivity extends Activity
                 }
             });
 
-            Button keywordtabBtn = (Button) rootView.findViewById(R.id.tab02);
+            Button keywordtabBtn = (Button) mRootView.findViewById(R.id.tab02);
             keywordtabBtn.setPressed(true);
 
-            return rootView;
+            return mRootView;
+        }
+
+        @Override
+        public void onResume()
+        {
+            super.onResume();
+            PullDownInputView pullDownInputView = (PullDownInputView) mRootView.findViewById(R.id.pulldownView);
+            Rect delegateArea = new Rect();
+            View container = pullDownInputView.findViewById(R.id.handle);
+            container.getHitRect(delegateArea);
+
+            TouchDelegate delegate = new TouchDelegate(delegateArea, pullDownInputView);
+            pullDownInputView.setTouchDelegate(delegate);
         }
 
         private ArrayList<ListViewItem> getKeywordData()
@@ -364,7 +375,6 @@ public class NotiSettingActivity extends Activity
             pulldownView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
-                    Log.d("NJ Lee", "input : "+input);
                     DbHandler handler = new DbHandler(mActivity);
                     KeywordData keywordData = new KeywordData().setKeywordata(input)
                             .setKeywordstatus(DBValue.STATUS_LIKE);

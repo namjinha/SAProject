@@ -72,10 +72,12 @@
             android:orientation="vertical" >
 
             <LinearLayout
+                android:id="@+id/btn_spam"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:clickable="true"
                 android:orientation="vertical" >
 
                 <TextView
@@ -113,9 +115,11 @@
                     android:src="@drawable/icon_like_enable" />
 
                 <LinearLayout
+                    android:id="@+id/btn_like"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:clickable="true"
                     android:orientation="vertical" >
 
                     <TextView

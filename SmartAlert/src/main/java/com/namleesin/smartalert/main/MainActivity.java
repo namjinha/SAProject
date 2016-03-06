@@ -208,6 +208,28 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			}
 		});
 
+		View btn_spam = mMainDashboardView.findViewById(R.id.btn_spam);
+		btn_spam.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
+				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_HATE);
+
+				startActivity(i);
+			}
+		});
+
+		View btn_like = mMainDashboardView.findViewById(R.id.btn_like);
+		btn_like.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
+				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_FAVORITE);
+
+				startActivity(i);
+			}
+		});
+
 		mRemainLayout = findViewById(R.id.remain_area);
 		mRemainLayout.getViewTreeObserver().addOnGlobalLayoutListener(mLayoutListener);
 	}

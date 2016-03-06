@@ -4,6 +4,10 @@ package com.namleesin.smartalert.notimgr;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,17 +26,33 @@ import java.util.ArrayList;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationListener extends NotificationListenerService
 {
-	String[] checkText = { Notification.EXTRA_TEXT, Notification.EXTRA_INFO_TEXT,
+	public static String UPDATE_FILTER = "update_filter";
+	private String[] checkText = { Notification.EXTRA_TEXT, Notification.EXTRA_INFO_TEXT,
 						   Notification.EXTRA_BIG_TEXT,
 						   Notification.EXTRA_SUB_TEXT, Notification.EXTRA_SUMMARY_TEXT};
-	ArrayList<String> mFilterKeyword = new ArrayList<>();
-	ArrayList<String> mFilterPkg = new ArrayList<>();
+	private ArrayList<String> mFilterKeyword = new ArrayList<>();
+	private ArrayList<String> mFilterPkg = new ArrayList<>();
+
+	private BroadcastReceiver mFilterUpdateReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			Log.d("NJ LEE", "action : "+action);
+			if(action.equals(UPDATE_FILTER))
+			{
+				loadFilterPkg();
+				loadFilterKeyword();
+			}
+		}
+	};
 
 	private void loadFilterKeyword()
 	{
 		DbHandler handler = new DbHandler(getApplication());
+		mFilterKeyword.clear();
 		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERWORD_INFO, null);
-		if(cursor == null)
+		Log.d("NJ LEE", "cursor : "+cursor);
+		if(cursor == null || cursor.getCount() == 0)
 			return;
 		cursor.moveToFirst();
 		do {
@@ -40,6 +60,7 @@ public class NotificationListener extends NotificationListenerService
 			if(word != null)
 			{
 				mFilterKeyword.add(word);
+				Log.d("NJ LEE", "word : " + word);
 			}
 		}while(cursor.moveToNext());
 	}
@@ -47,8 +68,9 @@ public class NotificationListener extends NotificationListenerService
 	private void loadFilterPkg()
 	{
 		DbHandler handler = new DbHandler(getApplication());
+		mFilterPkg.clear();
 		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERPKG_INFO, null);
-		if(cursor == null)
+		if(cursor == null || cursor.getCount() == 0)
 			return;
 
 		cursor.moveToFirst();
@@ -67,12 +89,25 @@ public class NotificationListener extends NotificationListenerService
 		super.onCreate();
 		loadFilterPkg();
 		loadFilterKeyword();
-		Log.d("NJ LEE", "onCreate");
+
+		Log.d("NJ LEE", "NotificationListener oncreate");
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(UPDATE_FILTER);
+		registerReceiver(mFilterUpdateReceiver, filter);
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		Log.d("NJ LEE", "onNotificationRemoved");
+		unregisterReceiver(mFilterUpdateReceiver);
 	}
 
 	@Override
 	public void onNotificationRemoved(StatusBarNotification sbn) 
 	{
+		super.onNotificationRemoved(sbn);
 	}
 	
 	public boolean isDislikePkg(String str)
@@ -117,6 +152,7 @@ public class NotificationListener extends NotificationListenerService
 		notiData.titletxt = noti.extras.getString(Notification.EXTRA_TITLE);
 
 		String notiText = "";
+
 		for(int i = 0; i< checkText.length; i++) {
 			CharSequence temp = noti.extras.getCharSequence(checkText[i]);
 			if(temp != null) {
@@ -129,7 +165,7 @@ public class NotificationListener extends NotificationListenerService
 		if(like!= null)
 		{
 			notiData.status = DBValue.STATUS_LIKE;
-			notiData.filter_word = like;;
+			notiData.filter_word = like;
 		}
 
 		boolean dislike = isDislikePkg(notiData.packagename);
@@ -139,6 +175,7 @@ public class NotificationListener extends NotificationListenerService
 			notiData.filter_word = null;
 		}
 
+		Log.d("NJ LEE", "notiText : "+notiText);
 		notiData.subtxt = notiText;
 		notiData.notitime = sbn.getPostTime()+"";
 		notiData.urlstatus = 0;

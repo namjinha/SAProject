@@ -40,6 +40,9 @@ public class TimelineDataLoader extends android.support.v4.content.AsyncTaskLoad
 	{
 		noti_data_list = new ArrayList<TimelineData>();
 		Cursor cursor = mDbHandler.selectDBData(mQueryType, mParam);
+		if(cursor == null || cursor.getCount() == 0)
+			return noti_data_list;
+
 		cursor.moveToFirst();
 		do
 		{
