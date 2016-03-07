@@ -9,9 +9,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -22,13 +20,9 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.namleesin.smartalert.R;
-import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
-import com.namleesin.smartalert.main.MainActivity;
-import com.namleesin.smartalert.settingmgr.ListViewAdapter;
 import com.namleesin.smartalert.settingmgr.ListViewItem;
-import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;

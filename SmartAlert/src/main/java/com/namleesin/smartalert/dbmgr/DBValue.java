@@ -57,7 +57,7 @@ public class DBValue
 	public static final String SQL_SELECT_LIKE_PACKGAE_COUNT	= "SELECT count(*) FROM noti_info_table WHERE noti_package=? and noti_status = "+STATUS_LIKE;
 	public static final String SQL_SELECT_PACKAGE_INFO			= "SELECT * FROM noti_info_table WHERE noti_package=? order by noti_time desc";
 	public static final String SQL_SELECT_PKGINFO_LIKESTAT		= "SELECT * FROM noti_info_table WHERE noti_status=?";
-	public static final String SQL_SELECT_FILTERWORD_INFO		= "select * from keyword_filter_table";
+	public static final String SQL_SELECT_FILTERWORD_INFO		= "select * from keyword_filter_table where keyword_status=?";
 	public static final String SQL_SELECT_FILTERPKG_INFO		= "select * from package_filter_table";
 	public static final String SQL_SELECT_FILTERPKG_PACKAGENAME = "select * from package_filter_table where package=?";
 
@@ -65,5 +65,5 @@ public class DBValue
 	public static final String SQL_SELECT_PACKAGE_NOTI_COUNT = "select noti_package, count(noti_package) as count from noti_info_table where strftime('%Y-%m-%d', noti_time / 1000, 'unixepoch') between date('now','start of day','0 month','-31 day') and date('now','start of day','0 month','0 day') group by noti_package order by count desc";
 
 	public static final String SQL_DELETE_FILTER_APP = "delete from package_filter_table where package=? and pakcage_status=?";
-	public static final String SQL_DELETE_FILTER_KEYWORD = "delete from keyword_filter_table where keyword=?";
+	public static final String SQL_DELETE_FILTER_KEYWORD = "delete from keyword_filter_table where keyword=? and keyword_status=?";
 }

@@ -74,10 +74,10 @@ public class DbHandler
 		switch (aSelectType) {
 			case DBValue.TYPE_SELECT_PACKAGE_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_INFO, selectionArgs);
-			case DBValue.TYPE_SELECT_FILTERWORD_INFO:
-				return mDbManager.query(DBValue.SQL_SELECT_FILTERWORD_INFO, selectionArgs);
 			case DBValue.TYPE_SELECT_FILTER_PACKAGE:
 				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_PACKAGENAME, selectionArgs);
+			case DBValue.TYPE_SELECT_FILTERWORD_INFO:
+				return mDbManager.query(DBValue.SQL_SELECT_FILTERWORD_INFO, selectionArgs);
 			case DBValue.TYPE_SELECT_FILTERPKG_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_INFO, null);
 			case DBValue.TYPE_SELECT_DAILY_NOTI_INFO:
