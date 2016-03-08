@@ -16,21 +16,27 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import com.namleesin.smartalert.data.KeywordData;
 import com.namleesin.smartalert.data.NotiData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.shortcut.PrivacyMode;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Observable;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationListener extends NotificationListenerService
 {
 	public static String UPDATE_FILTER = "update_filter";
-	private String[] checkText = { Notification.EXTRA_TEXT, Notification.EXTRA_INFO_TEXT,
-						   Notification.EXTRA_BIG_TEXT,
-						   Notification.EXTRA_SUB_TEXT, Notification.EXTRA_SUMMARY_TEXT};
-	private ArrayList<String> mFilterKeyword = new ArrayList<>();
+	private String[] checkText = {  Notification.EXTRA_TEXT,
+									Notification.EXTRA_INFO_TEXT,
+									Notification.EXTRA_BIG_TEXT,
+						   			Notification.EXTRA_SUB_TEXT,
+									Notification.EXTRA_SUMMARY_TEXT};
+
+	private ArrayList<KeywordData> mFilterKeyword = new ArrayList<>();
 	private ArrayList<String> mFilterPkg = new ArrayList<>();
 
 	private BroadcastReceiver mFilterUpdateReceiver = new BroadcastReceiver() {
@@ -50,17 +56,20 @@ public class NotificationListener extends NotificationListenerService
 	{
 		DbHandler handler = new DbHandler(getApplication());
 		mFilterKeyword.clear();
+
 		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERWORD_INFO, null);
-		Log.d("NJ LEE", "cursor : "+cursor);
-		if(cursor == null || cursor.getCount() == 0)
+		if(cursor == null || cursor.getCount() == 0) {
 			return;
+		}
+
 		cursor.moveToFirst();
 		do {
-			String word = cursor.getString(0);
-			if(word != null)
+			KeywordData keyword = new KeywordData();
+			keyword.setKeywordata(cursor.getString(0));
+			keyword.setKeywordstatus(cursor.getInt(1));
+			if(keyword != null)
 			{
-				mFilterKeyword.add(word);
-				Log.d("NJ LEE", "word : " + word);
+				mFilterKeyword.add(keyword);
 			}
 		}while(cursor.moveToNext());
 	}
@@ -70,8 +79,10 @@ public class NotificationListener extends NotificationListenerService
 		DbHandler handler = new DbHandler(getApplication());
 		mFilterPkg.clear();
 		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERPKG_INFO, null);
-		if(cursor == null || cursor.getCount() == 0)
+		if(cursor == null || cursor.getCount() == 0) {
+			Log.d("NJ LEE", "Nothing to load");
 			return;
+		}
 
 		cursor.moveToFirst();
 		do {
@@ -90,7 +101,6 @@ public class NotificationListener extends NotificationListenerService
 		loadFilterPkg();
 		loadFilterKeyword();
 
-		Log.d("NJ LEE", "NotificationListener oncreate");
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(UPDATE_FILTER);
 		registerReceiver(mFilterUpdateReceiver, filter);
@@ -100,7 +110,6 @@ public class NotificationListener extends NotificationListenerService
 	public void onDestroy()
 	{
 		super.onDestroy();
-		Log.d("NJ LEE", "onNotificationRemoved");
 		unregisterReceiver(mFilterUpdateReceiver);
 	}
 
@@ -110,22 +119,32 @@ public class NotificationListener extends NotificationListenerService
 		super.onNotificationRemoved(sbn);
 	}
 	
-	public boolean isDislikePkg(String str)
+	public Object isDislikePkg(String pkg_name, String noti)
 	{
 		for(String pkg : mFilterPkg) {
-			if (str.equals(pkg)) {
+			if (pkg_name.equals(pkg)) {
 				return true;
 			}
 		}
+
+		for(KeywordData word : mFilterKeyword)
+		{
+			if(word.getKeywordstatus() == DBValue.STATUS_DISLIKE &&
+					noti.contains(word.getKeywordata()))
+				return word.getKeywordata();
+		}
+
 		return false;
 	}
 	
 	public String getLikeFilter(String str)
 	{
-		for(String word : mFilterKeyword)
+		for(KeywordData word : mFilterKeyword)
 		{
-			if(str.contains(word))
-				return word;
+			Log.d("NJ LEE", "word : "+word.getKeywordata()+" status : "+word.getKeywordstatus());
+			if(word.getKeywordstatus() == DBValue.STATUS_LIKE &&
+					str.contains(word.getKeywordata()))
+				return word.getKeywordata();
 		}
 		return null;
 	}
@@ -161,6 +180,11 @@ public class NotificationListener extends NotificationListenerService
 			}
 		}
 
+		Log.d("NJ LEE", "notiText : "+notiText);
+		notiData.subtxt = notiText;
+		notiData.notitime = sbn.getPostTime()+"";
+		notiData.urlstatus = 0;
+
 		String like = getLikeFilter(notiText);
 		if(like!= null)
 		{
@@ -168,17 +192,25 @@ public class NotificationListener extends NotificationListenerService
 			notiData.filter_word = like;
 		}
 
-		boolean dislike = isDislikePkg(notiData.packagename);
-		if(dislike)
+		Object dislike = isDislikePkg(notiData.packagename, notiText);
+		if( dislike instanceof Boolean)
 		{
-			notiData.status = DBValue.STATUS_DISLIKE;
-			notiData.filter_word = null;
+			if((Boolean)dislike == true)
+			{
+				notiData.status = DBValue.STATUS_DISLIKE;
+				notiData.filter_word = null;
+				cancelNotification(sbn.getKey());
+			}
+			else
+			{
+				notiData.status = DBValue.STATUS_NORMAL;
+			}
 		}
-
-		Log.d("NJ LEE", "notiText : "+notiText);
-		notiData.subtxt = notiText;
-		notiData.notitime = sbn.getPostTime()+"";
-		notiData.urlstatus = 0;
+		else if (dislike instanceof String) {
+			notiData.status = DBValue.STATUS_DISLIKE;
+			notiData.filter_word = (String) dislike;
+			cancelNotification(sbn.getKey());
+		}
 
 		DbHandler handler = new DbHandler(getApplicationContext());
 		int result = handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);

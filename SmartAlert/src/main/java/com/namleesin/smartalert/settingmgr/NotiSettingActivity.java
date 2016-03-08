@@ -34,6 +34,7 @@ import com.namleesin.smartalert.data.PackData;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.main.MainValue;
+import com.namleesin.smartalert.notimgr.NotificationListener;
 import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
@@ -132,6 +133,9 @@ public class NotiSettingActivity extends Activity
                 checkstate.setChecked(true);
                 handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
             }
+
+            Intent updateIntent = new Intent(NotificationListener.UPDATE_FILTER);
+            mActivity.sendBroadcast(updateIntent);
         }
 
         private class AppListAsyncTask extends AsyncTask<Void, Integer, ArrayList<ListViewItem>>
@@ -300,11 +304,14 @@ public class NotiSettingActivity extends Activity
             pullDownInputView.setOnPullDownInputViewCallback(new PullDownInputView.OnPullDownInputViewCallback() {
                 @Override
                 public void onPUlldownInpuViewCallback(String input) {
-                    Log.d("NJ Lee", "input : " + input);
                     DbHandler handler = new DbHandler(mActivity);
                     KeywordData keywordData = new KeywordData().setKeywordata(input)
                             .setKeywordstatus(DBValue.STATUS_DISLIKE);
                     handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
+
+                    Intent updateIntent = new Intent(NotificationListener.UPDATE_FILTER);
+                    mActivity.sendBroadcast(updateIntent);
+
                     Toast.makeText(mActivity, input + " 추가 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -379,6 +386,10 @@ public class NotiSettingActivity extends Activity
                     KeywordData keywordData = new KeywordData().setKeywordata(input)
                             .setKeywordstatus(DBValue.STATUS_LIKE);
                     handler.insertDB(DBValue.TYPE_INSERT_KEYWORDFILTER, keywordData);
+
+                    Intent updateIntent = new Intent(NotificationListener.UPDATE_FILTER);
+                    mActivity.sendBroadcast(updateIntent);
+
                     Toast.makeText(mActivity, input+" 추가 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
