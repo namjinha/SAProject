@@ -46,16 +46,13 @@ import com.namleesin.smartalert.utils.PFValue;
 
 
 
-public class MainActivity extends FragmentActivity implements DrawerListener,
-		LoaderCallbacks<ArrayList<NotiInfoData>>,
-		AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends FragmentActivity implements LoaderCallbacks<ArrayList<NotiInfoData>>, NavigationView.OnNavigationItemSelectedListener {
 	private final String AD_UNIT_ID = "ca-app-pub-6738646161258413/2235663683";
 	private InterstitialAd interstitialAd = null;
 
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
-	//private DrawerLayout mMenuDrawer;
 	private LinearLayout mOverlay;
 	private int mOverlayHeight = 0;
 	private View mRemainLayout;
@@ -119,30 +116,15 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	private void initView()
 	{
-		//MenuDrawerView menu_view = (MenuDrawerView) findViewById(R.id.menu_list);
-		//menu_view.setOnMenuItemClickListener(this);
-		/*menu_view.setCloseClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mMenuDrawer.closeDrawers();
-			}
-		});
-*/
-
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
-		//mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
-		//mMenuDrawer.setDrawerListener(this);
 		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
 		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//if (mMenuDrawer.isDrawerOpen(GravityCompat.START)) {
-				//	mMenuDrawer.closeDrawers();
-				//} else {
-				//	mMenuDrawer.openDrawer(GravityCompat.START);
-				//}
+				DrawerLayout drawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+				drawer.openDrawer(GravityCompat.START);
 			}
 		});
 
@@ -420,43 +402,6 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onDrawerClosed(View arg0) {
-	}
-
-	@Override
-	public void onDrawerOpened(View arg0) {
-
-	}
-
-	@Override
-	public void onDrawerSlide(View arg0, float arg1) {
-
-	}
-
-	@Override
-	public void onDrawerStateChanged(int arg0) {
-
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-	{
-		switch(position)
-		{
-			case MainValue.MENU_ITEM_SPAM_ALERT:
-				OpenActivity.openSpamSettingActivity(this, 0);
-				break;
-			case MainValue.MENU_ITEM_LIKE_ALERT:
-				OpenActivity.openSpamSettingActivity(this, 2);
-				break;
-			default:
-				break;
-		}
-
-		//mMenuDrawer.closeDrawers();
 	}
 
 	@Override
