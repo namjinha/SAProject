@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -47,15 +48,14 @@ import com.namleesin.smartalert.utils.PFValue;
 
 public class MainActivity extends FragmentActivity implements DrawerListener,
 		LoaderCallbacks<ArrayList<NotiInfoData>>,
-		AdapterView.OnItemClickListener
-{
+		AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 	private final String AD_UNIT_ID = "ca-app-pub-6738646161258413/2235663683";
 	private InterstitialAd interstitialAd = null;
 
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
-	private DrawerLayout mMenuDrawer;
+	//private DrawerLayout mMenuDrawer;
 	private LinearLayout mOverlay;
 	private int mOverlayHeight = 0;
 	private View mRemainLayout;
@@ -119,25 +119,30 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	private void initView()
 	{
-		MenuDrawerView menu_view = (MenuDrawerView) findViewById(R.id.menu_list);
-		menu_view.setOnMenuItemClickListener(this);
-		menu_view.setCloseClickListener(new View.OnClickListener() {
+		//MenuDrawerView menu_view = (MenuDrawerView) findViewById(R.id.menu_list);
+		//menu_view.setOnMenuItemClickListener(this);
+		/*menu_view.setCloseClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				mMenuDrawer.closeDrawers();
 			}
 		});
-		mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
-		mMenuDrawer.setDrawerListener(this);
+*/
+
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+
+		//mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+		//mMenuDrawer.setDrawerListener(this);
 		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
 		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mMenuDrawer.isDrawerOpen(GravityCompat.START)) {
-					mMenuDrawer.closeDrawers();
-				} else {
-					mMenuDrawer.openDrawer(GravityCompat.START);
-				}
+				//if (mMenuDrawer.isDrawerOpen(GravityCompat.START)) {
+				//	mMenuDrawer.closeDrawers();
+				//} else {
+				//	mMenuDrawer.openDrawer(GravityCompat.START);
+				//}
 			}
 		});
 
@@ -451,6 +456,31 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				break;
 		}
 
-		mMenuDrawer.closeDrawers();
+		//mMenuDrawer.closeDrawers();
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu1:
+				OpenActivity.openSpamSettingActivity(this, 0);
+				break;
+			case R.id.menu2:
+				OpenActivity.openSpamSettingActivity(this, 2);
+				break;
+			case R.id.menu3:
+				break;
+			case R.id.menu4:
+				break;
+			default:
+				break;
+		}
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+		drawer.closeDrawer(GravityCompat.START);
+
+		return false;
 	}
 }
