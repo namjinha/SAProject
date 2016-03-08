@@ -48,6 +48,14 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
         {
             queryType = DBValue.TYPE_SELECT_PKGINFO_LIKESTAT;
         }
+        else if(type == TYPE_HATE)
+        {
+            queryType = DBValue.TYPE_SELECT_DISLIKE_PKG_INFO;
+        }
+        else
+        {
+            queryType = DBValue.TYPE_SELECT_NOTI_INFO;
+        }
 
         setContentView(R.layout.activity_timeline);
         mTimelineListView = (ListView) findViewById(R.id.timeline_list);

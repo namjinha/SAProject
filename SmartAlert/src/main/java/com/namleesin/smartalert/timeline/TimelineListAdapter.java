@@ -17,6 +17,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.namleesin.smartalert.R;
+import com.namleesin.smartalert.dbmgr.DBValue;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class TimelineListAdapter extends BaseAdapter {
 
     class ViewHolder
     {
+        ImageView mStatusIv;
         TextView mDataTv;
         TextView mContentTv;
         TextView mAppnameTv;
@@ -124,6 +126,7 @@ public class TimelineListAdapter extends BaseAdapter {
         if(convertView == null || convertView.getTag() instanceof Integer) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.layout_timeline_list, parent, false);
+            holder.mStatusIv = (ImageView) convertView.findViewById(R.id.img_status);
             holder.mDataTv = (TextView) convertView.findViewById(R.id.date);
             holder.mContentTv = (TextView) convertView.findViewById(R.id.content);
             holder.mAppnameTv = (TextView) convertView.findViewById(R.id.app_name);
@@ -135,7 +138,20 @@ public class TimelineListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String date = mDataArray.get(index).getDate();
+        TimelineData timeData = mDataArray.get(index);
+        if(timeData.getLikeStatus() == DBValue.STATUS_LIKE)
+        {
+            holder.mStatusIv.setBackgroundResource(R.drawable.timeline_like);
+        }
+        else if(timeData.getLikeStatus() == DBValue.STATUS_DISLIKE)
+        {
+            holder.mStatusIv.setBackgroundResource(R.drawable.timeline_spam);
+        }
+        else
+        {
+            holder.mStatusIv.setBackgroundResource(R.drawable.timeline_noti);
+        }
+        String date = timeData.getDate();
         if(date != null) {
             long dateLong = Long.valueOf(date);
             String dateStr = new SimpleDateFormat("yyyy. MM. dd hh:mm a").format(new Date(dateLong));
@@ -143,7 +159,6 @@ public class TimelineListAdapter extends BaseAdapter {
         }
 
         holder.mContentTv.setText(mDataArray.get(index).getContent());
-
         holder.mAppnameTv.setText(mDataArray.get(index).getAppName());
         try {
             Drawable icon = mPkgMgr.getApplicationInfo(mDataArray.get(index).getPkgName(), PackageManager.GET_UNINSTALLED_PACKAGES).loadIcon(mPkgMgr);

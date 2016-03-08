@@ -176,6 +176,15 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
 		total_view.setText(total_cnt+"");
+		total_view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
+				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_TIME);
+
+				startActivity(i);
+			}
+		});
 
 		TextView spam_view = (TextView) findViewById(R.id.spam_cnt_txt);
 		spam_view.setText(spam_cnt+"");
