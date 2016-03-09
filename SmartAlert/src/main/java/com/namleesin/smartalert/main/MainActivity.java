@@ -25,6 +25,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +41,7 @@ import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.shortcut.PrivacyMode;
 import com.namleesin.smartalert.timeline.TimeLineActivity;
+import com.namleesin.smartalert.utils.AppInfo;
 import com.namleesin.smartalert.utils.NotiAlertState;
 import com.namleesin.smartalert.utils.PFMgr;
 import com.namleesin.smartalert.utils.PFValue;
@@ -119,6 +121,9 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
+		TextView provertxt = (TextView)navigationView.getHeaderView(0).findViewById(R.id.prodver);
+		provertxt.setText(AppInfo.getVersionName(MainActivity.this));
+
 		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
 		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
@@ -137,6 +142,19 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 
 		mAdapter = new NotiDataListAdapter(this);
 		ListView list = (ListView)findViewById(R.id.noti_list);
+		LinearLayout lview = (LinearLayout)findViewById(R.id.emptytimelinelist);
+		list.setEmptyView(lview);
+
+		Button openspambtn = (Button)findViewById(R.id.openspambtn);
+		openspambtn.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				OpenActivity.openSpamSettingActivity(MainActivity.this, 0);
+			}
+		});
+
 		list.setAdapter(mAdapter);
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -384,27 +402,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public boolean onNavigationItemSelected(MenuItem item)
 	{
 		switch (item.getItemId())
@@ -416,8 +413,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 				OpenActivity.openSpamSettingActivity(this, 2);
 				break;
 			case R.id.menu3:
-				break;
-			case R.id.menu4:
+				OpenActivity.openGuideMgrActivity(this);
 				break;
 			default:
 				break;

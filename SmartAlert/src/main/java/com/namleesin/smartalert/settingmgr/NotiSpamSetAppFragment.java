@@ -38,21 +38,14 @@ public class NotiSpamSetAppFragment extends Fragment implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        DbHandler handler = new DbHandler(getActivity().getApplicationContext());
-
-        PackData packdata = new PackData();
-        packdata.packagename = ((ListViewItem) mAdapter.getItem(position)).mPackageName;
-
         CheckBox checkstate = (CheckBox) view.findViewById(R.id.checkstate);
         if (true == checkstate.isChecked())
         {
             checkstate.setChecked(false);
-            handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
         }
         else
         {
             checkstate.setChecked(true);
-            handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
         }
     }
 

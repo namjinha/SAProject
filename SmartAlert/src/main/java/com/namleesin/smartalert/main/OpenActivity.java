@@ -55,4 +55,10 @@ public class OpenActivity
 		i.putExtra(MainValue.SET_INDEX_NUMBER, aIndex);
 		((Activity) aContext).startActivity(i);
 	}
+
+	public static void openGuideMgrActivity(Context aContext)
+	{
+		Intent i = new Intent(aContext, GuideMgrActivity.class);
+		((Activity)aContext).startActivity(i);
+	}
 }

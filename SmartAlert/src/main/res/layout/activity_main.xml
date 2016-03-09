@@ -63,7 +63,30 @@
                         android:layout_below="@+id/main_dashboard"
                         android:divider="@color/line2"
                         android:dividerHeight="0.5dp" />
-
+                    <LinearLayout
+                        android:id="@+id/emptytimelinelist"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/bg2"
+                            android:text="스팸으로 차단된 알림이 없습니다."/>
+                        <Button
+                            android:id="@+id/openspambtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="67dp"
+                            android:layout_marginTop="42dp"
+                            android:layout_marginLeft="85dp"
+                            android:layout_marginRight="85dp"
+                            android:text="스팸 알림 설정"
+                            android:textSize="18sp"
+                            android:textColor="@color/bg4"
+                            android:background="@xml/next_btn_selector"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/more_btn"
                         android:layout_width="match_parent"
@@ -98,14 +121,6 @@
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/activity_main_drawer" />
-        <!--
-        <com.namleesin.smartalert.main.MenuDrawerView
-            android:id="@+id/menu_list"
-            android:layout_width="250dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#f6f6f6"
-            android:dividerHeight="1dp" />-->
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>
