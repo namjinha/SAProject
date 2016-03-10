@@ -356,6 +356,8 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 				break;
 			case MainValue.RES_SL_SETTING:
 				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_SETTING_OK);
+
+				openGuideMainActivity();
 				break;
 			default:
 				break;
@@ -395,9 +397,19 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 				{
 					OpenActivity.startAlertSettingActivity(this);
 				}
+				openGuideMainActivity();
 				break;
 			default:
 				break;
+		}
+	}
+
+	private void openGuideMainActivity()
+	{
+		boolean showguidestate = new PFMgr(this).getBooleanValue(PFValue.PRE_CHECK_STATE, false);
+		if(false == showguidestate)
+		{
+			OpenActivity.openMainGuideActivity(this);
 		}
 	}
 

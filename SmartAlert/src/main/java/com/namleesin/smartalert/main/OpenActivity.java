@@ -61,4 +61,10 @@ public class OpenActivity
 		Intent i = new Intent(aContext, GuideMgrActivity.class);
 		((Activity)aContext).startActivity(i);
 	}
+
+	public static void openMainGuideActivity(Context aContext)
+	{
+		Intent i = new Intent(aContext, MainGuideActivity.class);
+		((Activity)aContext).startActivity(i);
+	}
 }

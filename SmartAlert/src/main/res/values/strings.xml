@@ -9,4 +9,8 @@
     <string name="title_activity_like_noti_setting">LikeNotiSettingActivity</string>
     <string name="title_activity_spam_noti_setting">SpamNotiSettingActivity</string>
     <string name="banner_ad_unit_id">ca-app-pub-6738646161258413/8938332082</string>
+
+    <string name="title_activity_main_guide">MainGuideActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
