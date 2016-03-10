@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -133,9 +134,18 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 			}
 		});
 
-		mActionbar.setOnGraphButtonListener(new View.OnClickListener() {
+		mActionbar.setOnGraphButtonListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
+				int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
+				if(total_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT01), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				OpenActivity.startGraphActivity(MainActivity.this);
 			}
 		});
@@ -175,15 +185,23 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 
 	private void initDashboard()
 	{
-		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
-		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
-		int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
+		final int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
+		final int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
+		final int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
 
 		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
 		total_view.setText(total_cnt+"");
-		total_view.setOnClickListener(new View.OnClickListener() {
+		total_view.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(total_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT01), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_TIME);
 
@@ -200,18 +218,23 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 		mMainDashboardView = findViewById(R.id.main_dashboard);
 		mOverlay = (LinearLayout) findViewById(R.id.overlay);
 		View more_btn = findViewById(R.id.more_btn);
-		more_btn.setOnClickListener(new View.OnClickListener() {
+		more_btn.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mRemainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
 				View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 				float pixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
-				if (mIsListExpanded == false) {
+				if (mIsListExpanded == false)
+				{
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
 					mOverlay.startAnimation(ani);
 					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_VIEW, "최근 한달동안 숨김 알림 앱 순위");
-				} else {
+				}
+				else
+				{
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
 					mOverlay.startAnimation(ani);
@@ -223,9 +246,17 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 		});
 
 		View btn_spam = mMainDashboardView.findViewById(R.id.btn_spam);
-		btn_spam.setOnClickListener(new View.OnClickListener() {
+		btn_spam.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(spam_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT02), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_HATE);
 
@@ -234,9 +265,17 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Ar
 		});
 
 		View btn_like = mMainDashboardView.findViewById(R.id.btn_like);
-		btn_like.setOnClickListener(new View.OnClickListener() {
+		btn_like.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(like_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT03), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_FAVORITE);
 

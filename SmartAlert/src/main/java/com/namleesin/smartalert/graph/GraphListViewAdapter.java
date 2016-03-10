@@ -81,7 +81,8 @@ public class GraphListViewAdapter extends BaseAdapter
     public View getView(final int position, View convertView, ViewGroup parent)
     {
         ViewHolder holder;
-        if (convertView == null) {
+        if (convertView == null)
+        {
             holder = new ViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -92,30 +93,6 @@ public class GraphListViewAdapter extends BaseAdapter
             holder.conttextview = (TextView) convertView.findViewById(R.id.appcounttxt);
             holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressbar);
             holder.blockbtn = (ToggleButton) convertView.findViewById(R.id.blockbtn);
-            holder.blockbtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    DbHandler handler = new DbHandler(mContext);
-
-                    PackData packdata = new PackData();
-                    packdata.packagename = mListData.get(position).mPackageName;
-
-                    ToggleButton checkstate = (ToggleButton)v.findViewById(R.id.blockbtn);
-
-                    if (true == checkstate.isChecked())
-                    {
-                        handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
-                        checkstate.setChecked(checkstate.isChecked());
-                    }
-                    else
-                    {
-                        handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
-                        checkstate.setChecked(checkstate.isChecked());
-                    }
-                }
-            });
 
             holder.progressBar.setMax(mMaxCount);
 
@@ -125,6 +102,31 @@ public class GraphListViewAdapter extends BaseAdapter
         {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.blockbtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DbHandler handler = new DbHandler(mContext);
+
+                PackData packdata = new PackData();
+                packdata.packagename = mListData.get(position).mPackageName;
+
+                ToggleButton checkstate = (ToggleButton)v.findViewById(R.id.blockbtn);
+
+                if (true == checkstate.isChecked())
+                {
+                    handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
+                    checkstate.setChecked(true);
+                }
+                else
+                {
+                    handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
+                    checkstate.setChecked(false);
+                }
+            }
+        });
 
         ListViewItem data = mListData.get(position);
 

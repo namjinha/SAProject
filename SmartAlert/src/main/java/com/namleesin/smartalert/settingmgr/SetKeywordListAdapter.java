@@ -70,27 +70,29 @@ public class SetKeywordListAdapter extends BaseAdapter
 
             holder.textview = (TextView) convertView.findViewById(R.id.appname);
             holder.deletebtn = (Button) convertView.findViewById(R.id.deleteBtn);
-            holder.deletebtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    DbHandler handler = new DbHandler(mContext);
-                    KeywordData keywordData = new KeywordData();
-                    keywordData.setKeywordata(mListData.get(position).mAppName);
-                    keywordData.setKeywordstatus(mListData.get(position).mFilterState);
-                    handler.deleteDB(DBValue.TYPE_DELETE_FILTER_KEYWORD, keywordData);
 
-                    mListData.remove(position);
-                    notifyDataSetChanged();
-                }
-            });
             convertView.setTag(holder);
         }
         else
         {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.deletebtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DbHandler handler = new DbHandler(mContext);
+                KeywordData keywordData = new KeywordData();
+                keywordData.setKeywordata(mListData.get(position).mAppName);
+                keywordData.setKeywordstatus(mListData.get(position).mFilterState);
+                handler.deleteDB(DBValue.TYPE_DELETE_FILTER_KEYWORD, keywordData);
+
+                mListData.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
         ListViewItem data = mListData.get(position);
 

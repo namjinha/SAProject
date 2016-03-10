@@ -63,4 +63,8 @@
     <string name="STR_MENU_TXT03">관심 알림 설정</string>
     <string name="STR_MENU_TXT04">제품 가이드</string>
 
+    <string name="STR_TOAST_TXT01">알림 정보가 없습니다.</string>
+    <string name="STR_TOAST_TXT02">스팸 알림 정보가 없습니다.</string>
+    <string name="STR_TOAST_TXT03">관심 알림 정보가 없습니다.</string>
+
 </resources>

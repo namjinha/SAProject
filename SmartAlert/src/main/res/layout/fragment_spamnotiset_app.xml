@@ -16,7 +16,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/bg7"
+        android:background="@color/bg4"
         android:progressDrawable="@xml/progress_color"
         android:max="100"
         android:progress="10"/>

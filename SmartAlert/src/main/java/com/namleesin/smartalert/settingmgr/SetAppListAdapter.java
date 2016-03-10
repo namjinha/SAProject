@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
@@ -72,28 +73,6 @@ public class SetAppListAdapter extends BaseAdapter
             holder.imageview = (ImageView) convertView.findViewById(R.id.appicon);
             holder.textview = (TextView) convertView.findViewById(R.id.appname);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkstate);
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-            {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-                {
-                    DbHandler handler = new DbHandler(mContext);
-
-                    PackData packdata = new PackData();
-                    packdata.packagename = mListData.get(position).mPackageName;
-
-                    if (false == buttonView.isChecked())
-                    {
-                        buttonView.setChecked(false);
-                        handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
-                    }
-                    else
-                    {
-                        buttonView.setChecked(true);
-                        handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
-                    }
-                }
-            });
 
             convertView.setTag(holder);
         }
@@ -101,6 +80,29 @@ public class SetAppListAdapter extends BaseAdapter
         {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                DbHandler handler = new DbHandler(mContext);
+
+                PackData packdata = new PackData();
+                packdata.packagename = mListData.get(position).mPackageName;
+
+                if (false == buttonView.isChecked())
+                {
+                    buttonView.setChecked(false);
+                    handler.deleteDB(DBValue.TYPE_DELETE_FILTER_APP, packdata);
+                }
+                else
+                {
+                    buttonView.setChecked(true);
+                    handler.insertDB(DBValue.TYPE_INSERT_PACKAGEFILTER, packdata);
+                }
+            }
+        });
 
         ListViewItem data = mListData.get(position);
 
