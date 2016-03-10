@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
-                    android:text="여기를 아래로 당겨 키워드를 입력하세요"/>
+                    android:text="@string/STR_PULLDOWN_TXT01"/>
             </LinearLayout>
 
             <LinearLayout
@@ -98,7 +98,7 @@
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/bg2"
                     android:textSize="18dp"
-                    android:text="닫기"/>
+                    android:text="@string/STR_COMM_BTN_CLOSE_TXT"/>
             </LinearLayout>
 
             <View

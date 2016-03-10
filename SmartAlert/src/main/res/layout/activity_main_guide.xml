@@ -23,7 +23,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginBottom="35dp"
             android:button="@xml/guide_check_selector"
-            android:text="다시 보지 않기"
+            android:text="@string/STR_MAIN_GUIDE_TXT01"
             android:paddingLeft="5dp"
             android:textColor="@color/bg4"
             />
@@ -35,7 +35,7 @@
             android:layout_marginBottom="35dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="닫기"
+            android:text="@string/STR_COMM_BTN_CLOSE_TXT"
             />
 
     </RelativeLayout>

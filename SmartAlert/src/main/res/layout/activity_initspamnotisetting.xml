@@ -29,7 +29,7 @@
             android:layout_weight="10"
             android:textSize="22sp"
             android:textColor="@color/bg4"
-            android:text="다 음"
+            android:text="@string/STR_COMM_BTN_NEXT_TXT"
             android:background="@xml/next_btn_selector"/>
         <TextView
             android:layout_width="0dp"

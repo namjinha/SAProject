@@ -157,7 +157,7 @@ public class NotificationListener extends NotificationListenerService
 			return true;
 		return false;
 	}
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)

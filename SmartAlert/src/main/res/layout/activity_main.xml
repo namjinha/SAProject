@@ -20,7 +20,7 @@
             <com.namleesin.smartalert.commonView.ActionBarView
                 android:id="@+id/actionbar"
                 custom:actionbarType="main"
-                custom:actionbarTitle="똑똑한 알림"
+                custom:actionbarTitle="@string/app_name"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 
@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:textColor="@color/bg2"
-                            android:text="스팸으로 차단된 알림이 없습니다."/>
+                            android:text="@string/STR_MAIN_TXT01"/>
                         <Button
                             android:id="@+id/openspambtn"
                             android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                             android:layout_marginTop="42dp"
                             android:layout_marginLeft="85dp"
                             android:layout_marginRight="85dp"
-                            android:text="스팸 알림 설정"
+                            android:text="@string/STR_COMM_BTN_SET_TXT"
                             android:textSize="18sp"
                             android:textColor="@color/bg4"
                             android:background="@xml/next_btn_selector"/>
@@ -107,7 +107,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="더보기" />
+                            android:text="@string/STR_MAIN_TXT02" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>

@@ -77,8 +77,8 @@
             android:gravity="center"
             android:textSize="10dp"
             android:textStyle="bold"
-            android:textOn="차단 중"
-            android:textOff="차단"
+            android:textOn="@string/STR_COMM_BTN_BLOCK_ON_TXT"
+            android:textOff="@string/STR_COMM_BTN_BLOCK_OFF_TXT"
             android:textColor="@color/bg12"
             android:background="@xml/block_btn_selector"/>
     </LinearLayout>

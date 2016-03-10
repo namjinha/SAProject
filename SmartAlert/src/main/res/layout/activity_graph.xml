@@ -12,7 +12,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="48dp"
 		custom:actionbarType="activity"
-		custom:actionbarTitle="최근 한달동안 숨김 알림">
+		custom:actionbarTitle="@string/STR_ACTION_TITLE_TXT01">
 	</com.namleesin.smartalert.commonView.ActionBarView>
 
 	<ProgressBar

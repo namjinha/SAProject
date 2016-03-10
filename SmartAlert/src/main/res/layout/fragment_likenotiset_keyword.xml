@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="관심 알림 설정"
+                android:text="@string/STR_NOTI_LIKE_SET_TXT01"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/bg7"/>
@@ -71,7 +71,7 @@
                     android:layout_weight="10"
                     android:textSize="15sp"
                     android:textColor="@color/bg7"
-                    android:text="키우드를 설정하여 관심 있는 알림을 모아 보세요!"/>
+                    android:text="@string/STR_NOTI_LIKE_SET_TXT02"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
