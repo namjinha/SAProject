@@ -5,6 +5,7 @@ package com.namleesin.smartalert.utils;
  */
 public class PFValue
 {
+    public static final String PRE_CHECK_STATE			= "pre_check_state";
     public static final String PRE_INIT_STATE 			= "pre_init_state";
 
     public static final int PRE_INIT_DEFAULT			= 0;

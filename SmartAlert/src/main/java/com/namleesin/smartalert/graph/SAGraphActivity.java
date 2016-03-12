@@ -9,7 +9,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -21,13 +20,9 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.namleesin.smartalert.R;
-import com.namleesin.smartalert.commonView.PullDownInputView;
 import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
-import com.namleesin.smartalert.main.MainActivity;
-import com.namleesin.smartalert.settingmgr.ListViewAdapter;
 import com.namleesin.smartalert.settingmgr.ListViewItem;
-import com.namleesin.smartalert.utils.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,22 +182,6 @@ public class SAGraphActivity extends Activity
         @Override
         protected ArrayList<ListViewItem> doInBackground(Void... params)
         {
-            AppInfo.AppFilter filter;
-            switch (AppInfo.MENU_MODE)
-            {
-                case AppInfo.MENU_DOWNLOAD:
-                    filter = AppInfo.THIRD_PARTY_FILTER;
-                    break;
-                default:
-                    filter = null;
-                    break;
-            }
-
-            if (filter != null)
-            {
-                filter.init();
-            }
-
             int i = 0;
             ListViewItem addInfo = null;
             ApplicationInfo info = null;
@@ -233,7 +212,6 @@ public class SAGraphActivity extends Activity
 
             for (ApplicationInfo app : mAppList)
             {
-
                     for(ListViewItem item : listAppInfoData)
                     {
                         if(item.mPackageName.equals(app.packageName))

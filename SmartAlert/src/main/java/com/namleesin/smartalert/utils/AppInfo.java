@@ -2,6 +2,7 @@ package com.namleesin.smartalert.utils;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 
@@ -20,6 +21,19 @@ public class AppInfo
     public static final int MENU_DOWNLOAD = 0;
     public static final int MENU_ALL = 1;
     public static int MENU_MODE = MENU_DOWNLOAD;
+
+    public static String getVersionName(Context context)
+    {
+        try
+        {
+            PackageInfo pi= context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionName;
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            return "N/A";
+        }
+    }
 
     public static interface AppFilter
     {

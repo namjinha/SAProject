@@ -5,27 +5,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
+import com.namleesin.smartalert.data.KeywordData;
+import com.namleesin.smartalert.dbmgr.DBValue;
+import com.namleesin.smartalert.dbmgr.DbHandler;
 
+import java.security.Key;
 import java.util.ArrayList;
 
-public class ListViewAdapter extends BaseAdapter
+public class SetKeywordListAdapter extends BaseAdapter
 {
     private class ViewHolder
     {
-        public ImageView imageview;
         public TextView textview;
-        public CheckBox checkBox;
+        public Button deletebtn;
     }
 
     private Context mContext = null;
     private ArrayList<ListViewItem> mListData = new ArrayList<ListViewItem>();
 
-    public ListViewAdapter(Context mContext)
+    public SetKeywordListAdapter(Context mContext)
     {
         super();
         this.mContext = mContext;
@@ -55,18 +59,17 @@ public class ListViewAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.noti_listitem, null);
+            convertView = inflater.inflate(R.layout.noti_keyword_listitem, null);
 
-            holder.imageview = (ImageView) convertView.findViewById(R.id.appicon);
             holder.textview = (TextView) convertView.findViewById(R.id.appname);
-            holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkstate);
+            holder.deletebtn = (Button) convertView.findViewById(R.id.deleteBtn);
 
             convertView.setTag(holder);
         }
@@ -75,27 +78,25 @@ public class ListViewAdapter extends BaseAdapter
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.deletebtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DbHandler handler = new DbHandler(mContext);
+                KeywordData keywordData = new KeywordData();
+                keywordData.setKeywordata(mListData.get(position).mAppName);
+                keywordData.setKeywordstatus(mListData.get(position).mFilterState);
+                handler.deleteDB(DBValue.TYPE_DELETE_FILTER_KEYWORD, keywordData);
+
+                mListData.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
         ListViewItem data = mListData.get(position);
 
-        if (data.mAppIcon != null)
-        {
-            holder.imageview.setImageDrawable(data.mAppIcon);
-        }
-        else
-        {
-            holder.imageview.setVisibility(View.GONE);
-        }
-
         holder.textview.setText(data.mAppName);
-
-        if(1 == data.mFilterState)
-        {
-            holder.checkBox.setChecked(true);
-        }
-        else
-        {
-            holder.checkBox.setChecked(false);
-        }
 
         return convertView;
     }

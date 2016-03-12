@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.namleesin.smartalert.R;
 import com.namleesin.smartalert.dbmgr.DBValue;
@@ -46,7 +48,7 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
         }
         else if(type == TYPE_FAVORITE)
         {
-            queryType = DBValue.TYPE_SELECT_PKGINFO_LIKESTAT;
+            queryType = DBValue.TYPE_SELECT_LIKE_PKG_INFO;
         }
         else if(type == TYPE_HATE)
         {
@@ -59,8 +61,12 @@ public class TimeLineActivity extends FragmentActivity implements LoaderManager.
 
         setContentView(R.layout.activity_timeline);
         mTimelineListView = (ListView) findViewById(R.id.timeline_list);
+
         mAdapter = new TimelineListAdapter(this);
         mTimelineListView.setAdapter(mAdapter);
+
+        LinearLayout lview = (LinearLayout)findViewById(R.id.emptytimelinelist);
+        mTimelineListView.setEmptyView(lview);
 
         getSupportLoaderManager().initLoader(1001, null, this).forceLoad();
     }

@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -19,7 +20,7 @@
             <com.namleesin.smartalert.commonView.ActionBarView
                 android:id="@+id/actionbar"
                 custom:actionbarType="main"
-                custom:actionbarTitle="똑똑한 알림"
+                custom:actionbarTitle="@string/app_name"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 
@@ -62,7 +63,30 @@
                         android:layout_below="@+id/main_dashboard"
                         android:divider="@color/line2"
                         android:dividerHeight="0.5dp" />
-
+                    <LinearLayout
+                        android:id="@+id/emptytimelinelist"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/bg2"
+                            android:text="@string/STR_MAIN_TXT01"/>
+                        <Button
+                            android:id="@+id/openspambtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="67dp"
+                            android:layout_marginTop="42dp"
+                            android:layout_marginLeft="85dp"
+                            android:layout_marginRight="85dp"
+                            android:text="@string/STR_COMM_BTN_SET_TXT"
+                            android:textSize="18sp"
+                            android:textColor="@color/bg4"
+                            android:background="@xml/next_btn_selector"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/more_btn"
                         android:layout_width="match_parent"
@@ -83,19 +107,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="더보기" />
+                            android:text="@string/STR_MAIN_TXT02" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
-        <com.namleesin.smartalert.main.MenuDrawerView
-            android:id="@+id/menu_list"
-            android:layout_width="250dp"
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="#f6f6f6"
-            android:dividerHeight="1dp" />
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/activity_main_drawer" />
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>

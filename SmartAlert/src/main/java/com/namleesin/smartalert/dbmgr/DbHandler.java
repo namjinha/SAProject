@@ -80,6 +80,8 @@ public class DbHandler
 		switch (aSelectType) {
 			case DBValue.TYPE_SELECT_PACKAGE_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_INFO, selectionArgs);
+			case DBValue.TYPE_SELECT_FILTER_PACKAGE:
+				return mDbManager.query(DBValue.SQL_SELECT_FILTERPKG_PACKAGENAME, selectionArgs);
 			case DBValue.TYPE_SELECT_FILTERWORD_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_FILTERWORD_INFO, selectionArgs);
 			case DBValue.TYPE_SELECT_FILTERPKG_INFO:
@@ -90,6 +92,8 @@ public class DbHandler
 				return mDbManager.query(DBValue.SQL_SELECT_PACKAGE_NOTI_COUNT, null);
 			case DBValue.TYPE_SELECT_DISLIKE_PKG_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_DISLIKE_PKG_INFO, null);
+			case DBValue.TYPE_SELECT_LIKE_PKG_INFO:
+				return mDbManager.query(DBValue.SQL_SELECT_LIKE_PKG_INFO, null);
 			case DBValue.TYPE_SELECT_NOTI_INFO:
 				return mDbManager.query(DBValue.SQL_SELECT_NOTI_INFO, null);
 			default:

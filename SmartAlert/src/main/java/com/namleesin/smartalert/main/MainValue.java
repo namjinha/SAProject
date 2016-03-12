@@ -11,5 +11,8 @@ public class MainValue
 	public static final int MENU_ITEM_SPAM_ALERT				= 0;
 	public static final int MENU_ITEM_LIKE_ALERT				= 1;
 
+	public static final String ACTIVITY_TYPE  					= "activity_type";
+	public static final int TYPE_INIT_NOTI_SETTING			= 0;
+	public static final int TYPE_MENU_NOTI_SETTING			= 1;
 	public static final String SET_INDEX_NUMBER				= "index_number";
 }

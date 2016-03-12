@@ -23,6 +23,8 @@ import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.shortcut.PrivacyMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Observable;
 
@@ -36,28 +38,37 @@ public class NotificationListener extends NotificationListenerService
 						   			Notification.EXTRA_SUB_TEXT,
 									Notification.EXTRA_SUMMARY_TEXT};
 
-	private ArrayList<KeywordData> mFilterKeyword = new ArrayList<>();
+	private HashMap<Integer, ArrayList<KeywordData>> mFilterKeyword = new HashMap<>();
 	private ArrayList<String> mFilterPkg = new ArrayList<>();
+	DbHandler handler;
 
 	private BroadcastReceiver mFilterUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			Log.d("NJ LEE", "action : "+action);
 			if(action.equals(UPDATE_FILTER))
 			{
 				loadFilterPkg();
-				loadFilterKeyword();
+				loadFilterKeywords(DBValue.STATUS_LIKE);
+				loadFilterKeywords(DBValue.STATUS_DISLIKE);
 			}
 		}
 	};
 
-	private void loadFilterKeyword()
+	private void loadFilterKeywords(int type)
 	{
 		DbHandler handler = new DbHandler(getApplication());
-		mFilterKeyword.clear();
+		ArrayList<KeywordData> added = new ArrayList<>();
 
-		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERWORD_INFO, null);
+		if(mFilterKeyword.get(type) == null) {
+			mFilterKeyword.put(type, new ArrayList<KeywordData>());
+		}
+		else
+		{
+			mFilterKeyword.get(type).clear();
+		}
+
+		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERWORD_INFO, type+"");
 		if(cursor == null || cursor.getCount() == 0) {
 			return;
 		}
@@ -69,9 +80,10 @@ public class NotificationListener extends NotificationListenerService
 			keyword.setKeywordstatus(cursor.getInt(1));
 			if(keyword != null)
 			{
-				mFilterKeyword.add(keyword);
+				added.add(keyword);
 			}
 		}while(cursor.moveToNext());
+		mFilterKeyword.put(type, added);
 	}
 
 	private void loadFilterPkg()
@@ -80,7 +92,6 @@ public class NotificationListener extends NotificationListenerService
 		mFilterPkg.clear();
 		Cursor cursor = handler.selectDBData(DBValue.TYPE_SELECT_FILTERPKG_INFO, null);
 		if(cursor == null || cursor.getCount() == 0) {
-			Log.d("NJ LEE", "Nothing to load");
 			return;
 		}
 
@@ -98,8 +109,11 @@ public class NotificationListener extends NotificationListenerService
 	public void onCreate()
 	{
 		super.onCreate();
+		handler = new DbHandler(getApplicationContext());
+
 		loadFilterPkg();
-		loadFilterKeyword();
+		loadFilterKeywords(DBValue.STATUS_LIKE);
+		loadFilterKeywords(DBValue.STATUS_DISLIKE);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(UPDATE_FILTER);
@@ -119,31 +133,33 @@ public class NotificationListener extends NotificationListenerService
 		super.onNotificationRemoved(sbn);
 	}
 	
-	public Object isDislikePkg(String pkg_name, String noti)
+	public boolean isDislikePkg(String pkg_name, String noti)
 	{
 		for(String pkg : mFilterPkg) {
 			if (pkg_name.equals(pkg)) {
 				return true;
 			}
 		}
-
-		for(KeywordData word : mFilterKeyword)
-		{
-			if(word.getKeywordstatus() == DBValue.STATUS_DISLIKE &&
-					noti.contains(word.getKeywordata()))
-				return word.getKeywordata();
-		}
-
 		return false;
 	}
 	
 	public String getLikeFilter(String str)
 	{
-		for(KeywordData word : mFilterKeyword)
+		for(KeywordData word : mFilterKeyword.get(DBValue.STATUS_LIKE))
 		{
 			Log.d("NJ LEE", "word : "+word.getKeywordata()+" status : "+word.getKeywordstatus());
-			if(word.getKeywordstatus() == DBValue.STATUS_LIKE &&
-					str.contains(word.getKeywordata()))
+			if(str.contains(word.getKeywordata()))
+				return word.getKeywordata();
+		}
+		return null;
+	}
+
+	public String getDisLikeFilter(String str)
+	{
+		for(KeywordData word : mFilterKeyword.get(DBValue.STATUS_DISLIKE))
+		{
+			Log.d("NJ LEE", "word : "+word.getKeywordata()+" status : "+word.getKeywordstatus());
+			if(str.contains(word.getKeywordata()))
 				return word.getKeywordata();
 		}
 		return null;
@@ -157,7 +173,7 @@ public class NotificationListener extends NotificationListenerService
 			return true;
 		return false;
 	}
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)
@@ -180,7 +196,6 @@ public class NotificationListener extends NotificationListenerService
 			}
 		}
 
-		Log.d("NJ LEE", "notiText : "+notiText);
 		notiData.subtxt = notiText;
 		notiData.notitime = sbn.getPostTime()+"";
 		notiData.urlstatus = 0;
@@ -188,36 +203,42 @@ public class NotificationListener extends NotificationListenerService
 		String like = getLikeFilter(notiText);
 		if(like!= null)
 		{
+			Log.d("NJ LEE", "like : "+like);
 			notiData.status = DBValue.STATUS_LIKE;
 			notiData.filter_word = like;
 		}
 
-		Object dislike = isDislikePkg(notiData.packagename, notiText);
-		if( dislike instanceof Boolean)
+		handler = new DbHandler(getApplicationContext());
+		handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
+
+		if(isDislikePkg(notiData.packagename, notiText))
 		{
-			if((Boolean)dislike == true)
-			{
-				notiData.status = DBValue.STATUS_DISLIKE;
-				notiData.filter_word = null;
-				cancelNotification(sbn.getKey());
-			}
-			else
-			{
-				notiData.status = DBValue.STATUS_NORMAL;
-			}
-		}
-		else if (dislike instanceof String) {
 			notiData.status = DBValue.STATUS_DISLIKE;
-			notiData.filter_word = (String) dislike;
+			notiData.filter_word = null;
+			handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
+
 			cancelNotification(sbn.getKey());
 		}
-
-		DbHandler handler = new DbHandler(getApplicationContext());
-		int result = handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
+		else
+		{
+			String dislike = getDisLikeFilter(notiText);
+			Log.d("NJ LEE", "dislike : "+dislike);
+			if(dislike != null) {
+				notiData.status = DBValue.STATUS_DISLIKE;
+				notiData.filter_word = dislike;
+				cancelNotification(sbn.getKey());
+				handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
+			}
+			else if(like == null)//like keywork가 있는 경우는 normal에는 들어가지 않는다.
+			{
+				notiData.status = DBValue.STATUS_NORMAL;
+				handler.insertDB(DBValue.TYPE_INSERT_NOTIINFO, notiData);
+			}
+		}
 
 		if(isPrivacyMode())
 		{
-			//cancelAllNotifications();
+			cancelAllNotifications();
 		}
 	}
 }

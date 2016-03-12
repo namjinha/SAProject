@@ -38,6 +38,7 @@ public class OpenActivity
 	public static void startSpamSettingActivity(Context aContext)
 	{
 		Intent i = new Intent(aContext, NotiSettingActivity.class);
+		i.putExtra(MainValue.ACTIVITY_TYPE, MainValue.TYPE_INIT_NOTI_SETTING);
 		((Activity)aContext).startActivityForResult(i, MainValue.RES_SL_SETTING);
 	}
 
@@ -50,7 +51,20 @@ public class OpenActivity
 	public static void openSpamSettingActivity(Context aContext, int aIndex)
 	{
 		Intent i = new Intent(aContext, NotiSettingActivity.class);
+		i.putExtra(MainValue.ACTIVITY_TYPE, MainValue.TYPE_MENU_NOTI_SETTING);
 		i.putExtra(MainValue.SET_INDEX_NUMBER, aIndex);
 		((Activity) aContext).startActivity(i);
+	}
+
+	public static void openGuideMgrActivity(Context aContext)
+	{
+		Intent i = new Intent(aContext, GuideMgrActivity.class);
+		((Activity)aContext).startActivity(i);
+	}
+
+	public static void openMainGuideActivity(Context aContext)
+	{
+		Intent i = new Intent(aContext, MainGuideActivity.class);
+		((Activity)aContext).startActivity(i);
 	}
 }

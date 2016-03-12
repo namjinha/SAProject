@@ -70,14 +70,16 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:layout_weight="2">
-        <Button
+        <ToggleButton
             android:id="@+id/blockbtn"
             android:layout_width="80dp"
             android:layout_height="35dp"
             android:gravity="center"
             android:textSize="10dp"
             android:textStyle="bold"
-            android:text="차단"
-            android:background="@color/bg1"/>
+            android:textOn="@string/STR_COMM_BTN_BLOCK_ON_TXT"
+            android:textOff="@string/STR_COMM_BTN_BLOCK_OFF_TXT"
+            android:textColor="@color/bg12"
+            android:background="@xml/block_btn_selector"/>
     </LinearLayout>
 </LinearLayout>

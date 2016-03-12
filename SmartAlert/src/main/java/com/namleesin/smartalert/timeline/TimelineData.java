@@ -7,6 +7,7 @@ public class TimelineData
 	public String pkgName;
 	public String appName;
 	public String content;
+	public String filter;
 	public int likeStatus;
 
 	public String date;
@@ -51,6 +52,15 @@ public class TimelineData
 	public TimelineData setDate(String date) {
 		this.date = date;
 		return this;
+	}
+
+	public TimelineData setFilter(String filter) {
+		this.filter = filter;
+		return this;
+	}
+
+	public String getFilter() {
+		return filter;
 	}
 
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -24,11 +25,13 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -39,23 +42,20 @@ import com.namleesin.smartalert.dbmgr.DBValue;
 import com.namleesin.smartalert.dbmgr.DbHandler;
 import com.namleesin.smartalert.shortcut.PrivacyMode;
 import com.namleesin.smartalert.timeline.TimeLineActivity;
+import com.namleesin.smartalert.utils.AppInfo;
 import com.namleesin.smartalert.utils.NotiAlertState;
 import com.namleesin.smartalert.utils.PFMgr;
 import com.namleesin.smartalert.utils.PFValue;
 
 
 
-public class MainActivity extends FragmentActivity implements DrawerListener,
-		LoaderCallbacks<ArrayList<NotiInfoData>>,
-		AdapterView.OnItemClickListener
-{
+public class MainActivity extends FragmentActivity implements LoaderCallbacks<ArrayList<NotiInfoData>>, NavigationView.OnNavigationItemSelectedListener {
 	private final String AD_UNIT_ID = "ca-app-pub-6738646161258413/2235663683";
 	private InterstitialAd interstitialAd = null;
 
 	private DbHandler mDBHandler;
 	private NotiDataListAdapter mAdapter;
 	private View mMainDashboardView;
-	private DrawerLayout mMenuDrawer;
 	private LinearLayout mOverlay;
 	private int mOverlayHeight = 0;
 	private View mRemainLayout;
@@ -107,49 +107,64 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 			@Override
 			public void onAdOpened() {
-				finish();
 			}
 
 			@Override
 			public void onAdFailedToLoad(int errorCode) {
-				finish();
 			}
 		});
+
+		finish();
 	}
 
 	private void initView()
 	{
-		MenuDrawerView menu_view = (MenuDrawerView) findViewById(R.id.menu_list);
-		menu_view.setOnMenuItemClickListener(this);
-		menu_view.setCloseClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mMenuDrawer.closeDrawers();
-			}
-		});
-		mMenuDrawer = (DrawerLayout) findViewById(R.id.menu_drawer);
-		mMenuDrawer.setDrawerListener(this);
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+
+		TextView provertxt = (TextView)navigationView.getHeaderView(0).findViewById(R.id.prodver);
+		provertxt.setText(AppInfo.getVersionName(MainActivity.this));
+
 		mActionbar = (ActionBarView) findViewById(R.id.actionbar);
 		mActionbar.setOnMenuButtonListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mMenuDrawer.isDrawerOpen(GravityCompat.START)) {
-					mMenuDrawer.closeDrawers();
-				} else {
-					mMenuDrawer.openDrawer(GravityCompat.START);
-				}
+				DrawerLayout drawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+				drawer.openDrawer(GravityCompat.START);
 			}
 		});
 
-		mActionbar.setOnGraphButtonListener(new View.OnClickListener() {
+		mActionbar.setOnGraphButtonListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
+				int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
+				if(total_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT01), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				OpenActivity.startGraphActivity(MainActivity.this);
 			}
 		});
 
 		mAdapter = new NotiDataListAdapter(this);
 		ListView list = (ListView)findViewById(R.id.noti_list);
+		LinearLayout lview = (LinearLayout)findViewById(R.id.emptytimelinelist);
+		list.setEmptyView(lview);
+
+		Button openspambtn = (Button)findViewById(R.id.openspambtn);
+		openspambtn.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				OpenActivity.openSpamSettingActivity(MainActivity.this, 0);
+			}
+		});
+
 		list.setAdapter(mAdapter);
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -170,15 +185,23 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 
 	private void initDashboard()
 	{
-		int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
-		int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
-		int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
+		final int total_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_TOTAL_COUNT, null);
+		final int spam_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_DISLIKE_COUNT, null);
+		final int like_cnt = mDBHandler.selectCountDB(DBValue.TYPE_SELECT_LIKE_COUNT, null);
 
 		TextView total_view = (TextView)findViewById(R.id.total_noti_txt);
 		total_view.setText(total_cnt+"");
-		total_view.setOnClickListener(new View.OnClickListener() {
+		total_view.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(total_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT01), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_TIME);
 
@@ -195,18 +218,23 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		mMainDashboardView = findViewById(R.id.main_dashboard);
 		mOverlay = (LinearLayout) findViewById(R.id.overlay);
 		View more_btn = findViewById(R.id.more_btn);
-		more_btn.setOnClickListener(new View.OnClickListener() {
+		more_btn.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mRemainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutListener);
 				View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 				float pixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
-				if (mIsListExpanded == false) {
+				if (mIsListExpanded == false)
+				{
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_GROW, mOverlayHeight, dpHeight);
 					mOverlay.startAnimation(ani);
 					mActionbar.setTitleType(ActionBarView.ACTIONBAR_TYPE_VIEW, "최근 한달동안 숨김 알림 앱 순위");
-				} else {
+				}
+				else
+				{
 					float dpHeight = content.getHeight() - pixel;
 					Animation ani = new GrowupAnimation(mOverlay, GrowupAnimation.MODE_SHRINK, dpHeight, mOverlayHeight);
 					mOverlay.startAnimation(ani);
@@ -218,9 +246,17 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		});
 
 		View btn_spam = mMainDashboardView.findViewById(R.id.btn_spam);
-		btn_spam.setOnClickListener(new View.OnClickListener() {
+		btn_spam.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(spam_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT02), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_HATE);
 
@@ -229,9 +265,17 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 		});
 
 		View btn_like = mMainDashboardView.findViewById(R.id.btn_like);
-		btn_like.setOnClickListener(new View.OnClickListener() {
+		btn_like.setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
+				if(like_cnt == 0)
+				{
+					Toast.makeText(MainActivity.this, getString(R.string.STR_TOAST_TXT03), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Intent i = new Intent(MainActivity.this, TimeLineActivity.class);
 				i.putExtra(TimeLineActivity.TIMELINE_TYPE, TimeLineActivity.TYPE_FAVORITE);
 
@@ -351,6 +395,8 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				break;
 			case MainValue.RES_SL_SETTING:
 				pmgr.setIntValue(PFValue.PRE_INIT_STATE, PFValue.PRE_INIT_SETTING_OK);
+
+				openGuideMainActivity();
 				break;
 			default:
 				break;
@@ -390,67 +436,43 @@ public class MainActivity extends FragmentActivity implements DrawerListener,
 				{
 					OpenActivity.startAlertSettingActivity(this);
 				}
+				openGuideMainActivity();
 				break;
 			default:
 				break;
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	private void openGuideMainActivity()
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onDrawerClosed(View arg0) {
-	}
-
-	@Override
-	public void onDrawerOpened(View arg0) {
-
-	}
-
-	@Override
-	public void onDrawerSlide(View arg0, float arg1) {
-
-	}
-
-	@Override
-	public void onDrawerStateChanged(int arg0) {
-
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-	{
-		switch(position)
+		boolean showguidestate = new PFMgr(this).getBooleanValue(PFValue.PRE_CHECK_STATE, false);
+		if(false == showguidestate)
 		{
-			case MainValue.MENU_ITEM_SPAM_ALERT:
+			OpenActivity.openMainGuideActivity(this);
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu1:
 				OpenActivity.openSpamSettingActivity(this, 0);
 				break;
-			case MainValue.MENU_ITEM_LIKE_ALERT:
+			case R.id.menu2:
 				OpenActivity.openSpamSettingActivity(this, 2);
+				break;
+			case R.id.menu3:
+				OpenActivity.openGuideMgrActivity(this);
 				break;
 			default:
 				break;
 		}
 
-		mMenuDrawer.closeDrawers();
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.menu_drawer);
+		drawer.closeDrawer(GravityCompat.START);
+
+		return false;
 	}
 }

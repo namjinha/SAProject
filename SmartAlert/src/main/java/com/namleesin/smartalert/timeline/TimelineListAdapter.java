@@ -3,7 +3,9 @@ package com.namleesin.smartalert.timeline;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.provider.CalendarContract;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -102,6 +104,39 @@ public class TimelineListAdapter extends BaseAdapter {
         return position;
     }
 
+    private Spannable getContentWithColor(int type, String content, String word)
+    {
+        String contentWitColor = null;
+        int index = 0;
+        ForegroundColorSpan colorSpan;
+
+        if(type == DBValue.STATUS_LIKE)
+        {
+            colorSpan = new ForegroundColorSpan(mCtx.getResources().getColor(R.color.like_txt));
+        }
+        else if(type == DBValue.STATUS_DISLIKE)
+        {
+            colorSpan = new ForegroundColorSpan(mCtx.getResources().getColor(R.color.spam_txt));
+        }
+        else    //Normal
+        {
+            return null;
+        }
+        Spannable coloredStr = new SpannableString(content);
+        Log.d("NJ LEE", "string : " + content + " change : " + word);
+        while(true){
+            index = content.indexOf(word, index);
+            if(index == -1)
+                break;
+
+            Log.d("NJ LEE", "index : " + index);
+            coloredStr.setSpan(colorSpan, index, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            index += word.length();
+        }
+        Log.d("NJ LEE", "complete : "+contentWitColor);
+        return coloredStr;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -151,6 +186,7 @@ public class TimelineListAdapter extends BaseAdapter {
         {
             holder.mStatusIv.setBackgroundResource(R.drawable.timeline_noti);
         }
+
         String date = timeData.getDate();
         if(date != null) {
             long dateLong = Long.valueOf(date);
@@ -158,7 +194,18 @@ public class TimelineListAdapter extends BaseAdapter {
             holder.mDataTv.setText(dateStr);
         }
 
-        holder.mContentTv.setText(mDataArray.get(index).getContent());
+        Spannable content = getContentWithColor(mDataArray.get(index).getLikeStatus(),
+                                             mDataArray.get(index).getContent(),
+                                             mDataArray.get(index).getFilter());
+        if(content == null)
+        {
+            holder.mContentTv.setText(mDataArray.get(index).getContent());
+        }
+        else
+        {
+            holder.mContentTv.setText(content);
+        }
+
         holder.mAppnameTv.setText(mDataArray.get(index).getAppName());
         try {
             Drawable icon = mPkgMgr.getApplicationInfo(mDataArray.get(index).getPkgName(), PackageManager.GET_UNINSTALLED_PACKAGES).loadIcon(mPkgMgr);

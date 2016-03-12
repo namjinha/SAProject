@@ -35,7 +35,7 @@
                     style="@style/fc2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="최근 한달 동안" />
+                    android:text="@string/STR_DASH_TXT01" />
             </LinearLayout>
 
             <LinearLayout
@@ -59,7 +59,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="프라이버시 모드"
+                    android:text="@string/STR_DASH_TXT02"
                     android:textColor="@color/bg2" />
             </LinearLayout>
         </LinearLayout>
@@ -98,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="스팸 알" />
+                    android:text="@string/STR_DASH_TXT03" />
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -140,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="관심 알" />
+                        android:text="@string/STR_DASH_TXT04" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
